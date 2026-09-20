@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Denis &amp; Clèda | Wedding</title>
+  <meta name="description" content="Join us as we celebrate the wedding of Denis Kalala and Clèda Mputu." />
+
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+
+  <!-- ================= Envelope intro ================= -->
+  <div id="envelope-overlay" class="envelope-overlay">
+    <a href="#home" id="envelope-skip" class="envelope-skip">Skip</a>
+
+    <div class="envelope-stage">
+      <div id="envelope" class="envelope" role="button" tabindex="0"
+           aria-label="Open your invitation">
+        <div class="envelope-card">
+          <p id="envelope-card-names" class="envelope-card-names">Denis &amp; Clèda</p>
+          <p id="envelope-card-date" class="envelope-card-date"></p>
+        </div>
+        <div class="envelope-body"></div>
+        <div class="envelope-flap"></div>
+        <div class="envelope-seal">D&amp;C</div>
+      </div>
+
+      <p class="envelope-prompt">Tap to open</p>
+
+      <button id="envelope-enter" class="btn btn-outline envelope-enter"
+              style="color:#fdf9f4; border-color:#fdf9f4;">
+        Enter
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= Nav ================= -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="#home" class="nav-monogram">D&amp;C</a>
+      <ul class="nav-links">
+        <li><a href="#details">Details</a></li>
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#rsvp">RSVP</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ================= Hero ================= -->
+  <header id="home" class="hero">
+    <p class="hero-eyebrow">We're getting married</p>
+    <h1 class="hero-names">Denis &amp; Clèda</h1>
+    <p class="hero-date" id="hero-date"></p>
+    <div class="hero-scroll-cue" aria-hidden="true"></div>
+  </header>
+
+  <!-- ================= Details ================= -->
+  <section id="details" class="section">
+    <div class="container">
+      <p class="details-names">Denis Kalala &amp; Clèda Mputu</p>
+      <div class="details-meta">
+        <span id="details-date"></span>
+        <span id="details-location"></span>
+      </div>
+
+      <div class="details-cards">
+        <div class="details-card">
+          <div class="details-card-icon">&#10052;</div>
+          <h3>Ceremony</h3>
+          <p id="details-ceremony-time"></p>
+          <p id="details-venue"></p>
+        </div>
+        <div class="details-card">
+          <div class="details-card-icon">&#127881;</div>
+          <h3>Reception</h3>
+          <p id="details-reception-time"></p>
+          <p id="details-location-2"></p>
+        </div>
+        <div class="details-card">
+          <div class="details-card-icon">&#9993;</div>
+          <h3>RSVP by</h3>
+          <p id="details-rsvp-deadline"></p>
+          <p><a href="#rsvp" class="btn-link">Respond below</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Countdown ================= -->
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div id="countdown" class="countdown">
+        <div class="countdown-unit">
+          <div class="countdown-value" id="countdown-days">00</div>
+          <div class="countdown-label">Days</div>
+        </div>
+        <div class="countdown-unit">
+          <div class="countdown-value" id="countdown-hours">00</div>
+          <div class="countdown-label">Hours</div>
+        </div>
+        <div class="countdown-unit">
+          <div class="countdown-value" id="countdown-minutes">00</div>
+          <div class="countdown-label">Minutes</div>
+        </div>
+        <div class="countdown-unit">
+          <div class="countdown-value" id="countdown-seconds">00</div>
+          <div class="countdown-label">Seconds</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Gallery ================= -->
+  <section id="gallery" class="section">
+    <div class="container">
+      <h2 class="section-title">Gallery</h2>
+      <p class="section-subtitle">A few of our favorites</p>
+
+      <div id="gallery-grid" class="gallery-grid">
+        <div class="gallery-item">
+          <div class="gallery-placeholder">Add photos in<br />assets/images/</div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-placeholder">Add photos in<br />assets/images/</div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-placeholder">Add photos in<br />assets/images/</div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-placeholder">Add photos in<br />assets/images/</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section id="faq" class="section">
+    <div class="container">
+      <h2 class="section-title">FAQ</h2>
+      <p class="section-subtitle">Good to know</p>
+
+      <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>What should I wear?</span>
+            <span class="faq-question-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Formal attire is requested. We'd love to see you in your favorite colors — just steer clear of white.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>Are kids welcome?</span>
+            <span class="faq-question-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>We love your little ones, but our celebration is an adults-only affair, with the exception of the wedding party.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>Is there parking at the venue?</span>
+            <span class="faq-question-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Yes, on-site parking is available. Details will be shared closer to the date.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false">
+            <span>Can I bring a plus-one?</span>
+            <span class="faq-question-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-answer">
+            <p>Please refer to your invitation for the number of guests included, and reach out if you have any questions.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= RSVP ================= -->
+  <section id="rsvp" class="section">
+    <div class="container">
+      <h2 class="section-title">RSVP</h2>
+      <p class="section-subtitle" id="rsvp-deadline-subtitle">Kindly respond</p>
+
+      <form id="rsvp-form" class="rsvp-form" name="rsvp" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="rsvp" />
+        <p class="form-honeypot">
+          <label>Don't fill this out if you're human: <input name="bot-field" /></label>
+        </p>
+
+        <div class="form-row">
+          <label for="rsvp-name">Full name</label>
+          <input type="text" id="rsvp-name" name="name" required />
+        </div>
+
+        <div class="form-row">
+          <label for="rsvp-email">Email</label>
+          <input type="email" id="rsvp-email" name="email" required />
+        </div>
+
+        <div class="form-row">
+          <label for="rsvp-attending">Will you attend?</label>
+          <select id="rsvp-attending" name="attending" required>
+            <option value="">Select an option</option>
+            <option value="yes">Joyfully accept</option>
+            <option value="no">Regretfully decline</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="rsvp-guests">Number of guests</label>
+          <input type="number" id="rsvp-guests" name="guests" min="1" max="10" value="1" />
+        </div>
+
+        <div class="form-row">
+          <label for="rsvp-message">Message (optional)</label>
+          <textarea id="rsvp-message" name="message" rows="4"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Send RSVP</button>
+        <p id="rsvp-status" class="rsvp-status" role="status"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ================= Footer ================= -->
+  <footer class="footer">
+    <div class="footer-monogram">D&amp;C</div>
+    <p id="footer-date"></p>
+    <p class="footer-hashtag" id="footer-hashtag"></p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/envelope.js"></script>
+  <script src="js/countdown.js"></script>
+  <script src="js/gallery.js"></script>
+  <script src="js/faq.js"></script>
+  <script src="js/rsvp.js"></script>
+  <script>
+    (function () {
+      if (typeof WEDDING_CONFIG === "undefined") return;
+
+      const set = (id, text) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = text;
+      };
+
+      set("hero-date", `${WEDDING_CONFIG.displayDate} — ${WEDDING_CONFIG.location}`);
+      set("details-date", WEDDING_CONFIG.displayDate);
+      set("details-location", WEDDING_CONFIG.location);
+      set("details-ceremony-time", WEDDING_CONFIG.ceremonyTime);
+      set("details-venue", WEDDING_CONFIG.venue);
+      set("details-reception-time", WEDDING_CONFIG.receptionTime);
+      set("details-location-2", WEDDING_CONFIG.location);
+      set("details-rsvp-deadline", WEDDING_CONFIG.rsvpDeadline);
+      set("rsvp-deadline-subtitle", `Kindly respond by ${WEDDING_CONFIG.rsvpDeadline}`);
+      set("footer-date", `${WEDDING_CONFIG.displayDate} · ${WEDDING_CONFIG.location}`);
+      set("footer-hashtag", WEDDING_CONFIG.hashtag);
+    })();
+  </script>
+</body>
+</html>

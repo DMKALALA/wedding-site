@@ -1,0 +1,5 @@
+[build]
+  publish = "."
+
+[[forms]]
+  name = "rsvp"

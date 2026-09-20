@@ -1,0 +1,193 @@
+/* -------------------------------------------------------------------- */
+/* Nav                                                                   */
+/* -------------------------------------------------------------------- */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(253, 249, 244, 0.9);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(62, 31, 58, 0.08);
+}
+
+.nav-inner {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-monogram {
+  font-family: var(--font-script);
+  font-size: 1.5rem;
+  color: var(--color-plum);
+}
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.nav-links a {
+  transition: color var(--transition-base);
+}
+
+.nav-links a:hover {
+  color: var(--color-gold);
+}
+
+/* -------------------------------------------------------------------- */
+/* Hero                                                                  */
+/* -------------------------------------------------------------------- */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  background: radial-gradient(circle at 50% 20%, var(--color-lilac-light), var(--color-cream) 70%);
+}
+
+.hero-eyebrow {
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  font-size: 0.75rem;
+  color: var(--color-ink-soft);
+  margin-bottom: 24px;
+}
+
+.hero-names {
+  font-family: var(--font-script);
+  font-size: clamp(3.5rem, 10vw, 7rem);
+  color: var(--color-plum);
+  line-height: 1.1;
+}
+
+.hero-date {
+  font-family: var(--font-sans);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  color: var(--color-ink-soft);
+  margin-top: 24px;
+}
+
+.hero-scroll-cue {
+  margin-top: 64px;
+  width: 1px;
+  height: 48px;
+  background: var(--color-plum);
+  opacity: 0.4;
+  animation: pulse-down 2s ease-in-out infinite;
+}
+
+@keyframes pulse-down {
+  0%, 100% { opacity: 0.1; transform: scaleY(0.6); }
+  50% { opacity: 0.5; transform: scaleY(1); }
+}
+
+/* -------------------------------------------------------------------- */
+/* Details section                                                       */
+/* -------------------------------------------------------------------- */
+.details-names {
+  font-family: var(--font-script);
+  font-size: clamp(2.25rem, 6vw, 3.75rem);
+  text-align: center;
+  color: var(--color-plum);
+  margin-bottom: 32px;
+}
+
+.details-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  margin-bottom: 64px;
+  font-family: var(--font-sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  color: var(--color-ink-soft);
+}
+
+.details-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.details-card {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 40px 32px;
+  text-align: center;
+  box-shadow: var(--shadow-soft);
+}
+
+.details-card-icon {
+  font-size: 1.75rem;
+  color: var(--color-gold);
+  margin-bottom: 16px;
+}
+
+.details-card h3 {
+  font-family: var(--font-script);
+  font-size: 1.75rem;
+  color: var(--color-plum);
+  margin-bottom: 12px;
+}
+
+.details-card p {
+  color: var(--color-ink-soft);
+  font-size: 0.95rem;
+}
+
+/* -------------------------------------------------------------------- */
+/* Footer                                                                */
+/* -------------------------------------------------------------------- */
+.footer {
+  background: var(--color-plum-dark);
+  color: var(--color-lilac-light);
+  text-align: center;
+  padding: 64px 24px;
+}
+
+.footer-monogram {
+  font-family: var(--font-script);
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
+
+.footer-hashtag {
+  font-family: var(--font-sans);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+/* -------------------------------------------------------------------- */
+/* Responsive                                                            */
+/* -------------------------------------------------------------------- */
+@media (max-width: 640px) {
+  .nav-links {
+    gap: 18px;
+    font-size: 0.7rem;
+  }
+
+  .section {
+    padding-block: 64px;
+  }
+}
