@@ -7,14 +7,14 @@
 /* Variables                                                             */
 /* -------------------------------------------------------------------- */
 :root {
-  --color-plum: #3e1f3a;
-  --color-plum-dark: #2a1327;
-  --color-lilac: #c9a9dd;
-  --color-lilac-light: #f1e6f7;
+  --color-plum: #7a4a44;
+  --color-plum-dark: #4a2e2b;
+  --color-lilac: #d9b8b0;
+  --color-lilac-light: #f3e6e1;
   --color-gold: #c9a24b;
-  --color-cream: #fdf9f4;
-  --color-ink: #2b2130;
-  --color-ink-soft: #5a4f5f;
+  --color-cream: #f7f3f0;
+  --color-ink: #2a2422;
+  --color-ink-soft: #6b5f5a;
 
   --font-script: "Parisienne", cursive;
   --font-serif: "Cormorant Garamond", serif;
