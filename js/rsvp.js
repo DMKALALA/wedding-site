@@ -15,6 +15,30 @@
     status.setAttribute("data-state", state);
   }
 
+  // Confetti bursts from wherever the RSVP section currently sits in the
+  // viewport, then the page scrolls back up to the hero once the guest has
+  // had a moment to see it.
+  function celebrateAndScrollHome() {
+    if (typeof confetti === "function") {
+      const rect = form.getBoundingClientRect();
+      const origin = {
+        x: (rect.left + rect.width / 2) / window.innerWidth,
+        y: Math.min(Math.max(rect.top / window.innerHeight, 0), 1),
+      };
+      confetti({
+        particleCount: 140,
+        spread: 90,
+        startVelocity: 45,
+        origin,
+        colors: ["#7a4a44", "#d9b8b0", "#c9a24b", "#f7f3f0"],
+      });
+    }
+
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }, 1400);
+  }
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -79,6 +103,7 @@
       }
 
       form.reset();
+      celebrateAndScrollHome();
     } catch (error) {
       setStatus("error", "Something went wrong. Please try again or reach out directly.");
     } finally {
