@@ -2,3 +2,9 @@
 Thumbs.db
 node_modules/
 .netlify/
+
+# Camera-original photos: huge and not web-usable directly.
+# Only the resized *-web.jpg copies in assets/images/ are tracked.
+assets/images/*
+!assets/images/*-web.jpg
+!assets/images/.gitkeep
