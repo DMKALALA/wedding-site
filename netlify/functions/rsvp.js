@@ -30,11 +30,14 @@ async function supabaseFetch(path, options = {}) {
       ...options.headers,
     },
   });
+  const text = await res.text();
   if (!res.ok) {
-    const text = await res.text();
     throw new Error(`Supabase ${path} failed: ${res.status} ${text}`);
   }
-  return res.status === 204 ? null : res.json();
+  // PostgREST returns an empty body (not just on 204) for inserts/updates
+  // unless `Prefer: return=representation` is set, so guard against that
+  // rather than assuming a non-204 status always has a JSON body.
+  return text ? JSON.parse(text) : null;
 }
 
 async function assignTable(partySize) {
