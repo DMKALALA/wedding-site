@@ -1,8 +1,10 @@
 // Netlify Function: POST /.netlify/functions/rsvp
 //
-// Verifies the submitting guest against the `guests` table (by email),
-// records their response in `rsvps`, and auto-assigns a reception table
-// (via the assign_table() Postgres function) when they're attending.
+// Verifies the submitting guest against the `guests` table (by their
+// unique invite code — not email, since not every guest's email is on
+// file), records their response in `rsvps`, and auto-assigns a
+// reception table (via the assign_table() Postgres function) when
+// they're attending.
 //
 // Requires these Netlify environment variables (Site settings ->
 // Environment variables), never exposed to the browser:
@@ -74,6 +76,7 @@ exports.handler = async (event) => {
 
   const name = (payload.name || "").trim();
   const email = (payload.email || "").trim().toLowerCase();
+  const inviteCode = (payload.inviteCode || "").trim().toUpperCase();
   const attending = payload.attending === "yes" || payload.attending === true;
   const message = (payload.message || "").trim();
   const requestedGuests = Math.max(1, parseInt(payload.guests, 10) || 1);
@@ -83,14 +86,14 @@ exports.handler = async (event) => {
     return jsonResponse(200, { ok: true, dropped: true });
   }
 
-  if (!name || !email) {
+  if (!name || !inviteCode) {
     return jsonResponse(400, { ok: false, error: "missing_fields" });
   }
 
   try {
-    // 1. Verify against the invite list, by email.
+    // 1. Verify against the invite list, by invite code.
     const guests = await supabaseFetch(
-      `guests?email=eq.${encodeURIComponent(email)}&select=*`
+      `guests?invite_code=eq.${encodeURIComponent(inviteCode)}&select=*`
     );
     const guest = guests && guests[0];
 
@@ -141,7 +144,7 @@ exports.handler = async (event) => {
       body: JSON.stringify({
         guest_id: guest.id,
         submitted_name: name,
-        submitted_email: email,
+        submitted_email: email || null,
         attending,
         guest_count: guestCount,
         message,

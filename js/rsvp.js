@@ -34,6 +34,7 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: formData.get("name"),
+          inviteCode: formData.get("inviteCode"),
           email: formData.get("email"),
           attending: formData.get("attending"),
           guests: formData.get("guests"),
@@ -48,7 +49,7 @@
         if (result.error === "not_found") {
           setStatus(
             "error",
-            "We couldn't find that name and email on our guest list. Please double check what you entered, or reach out to us directly."
+            "We couldn't find that invite code. Please double check what you entered, or reach out to us directly."
           );
         } else {
           throw new Error(result.error || "request_failed");

@@ -7,15 +7,19 @@
 -- ------------------------------------------------------------------
 -- guests: the master invite list. One row per invitation, which may
 -- represent a single person or a whole family/party. This is what
--- guest RSVP submissions are verified against.
+-- guest RSVP submissions are verified against, by invite_code (not
+-- email — you often won't have every guest's email up front). Give
+-- each guest/family their code however you like: printed on the
+-- invitation, texted, etc.
 -- ------------------------------------------------------------------
 create table if not exists guests (
   id uuid primary key default gen_random_uuid(),
   full_name text not null,
-  email text not null,
+  invite_code text not null,
+  email text,                              -- optional, just for your records
   party_size int not null default 1,       -- max guests this invite covers
   created_at timestamptz not null default now(),
-  unique (email)
+  unique (invite_code)
 );
 
 -- ------------------------------------------------------------------
@@ -37,7 +41,7 @@ create table if not exists rsvps (
   id uuid primary key default gen_random_uuid(),
   guest_id uuid not null references guests(id) on delete cascade unique,
   submitted_name text not null,
-  submitted_email text not null,
+  submitted_email text,
   attending boolean not null,
   guest_count int not null default 1,
   message text,
