@@ -5,8 +5,20 @@
 const BRIDAL_PARTY = {
   bride: { name: "Clèda Mputu", role: "Bride", photo: "assets/images/_DSC4849_Bride-web.jpg" },
   groom: { name: "Denis Kalala", role: "Groom", photo: "assets/images/_DSC4909_Groom-web.jpg" },
-  groomsmen: [],
-  bridesmaids: [],
+  // TODO: swap these placeholder names for the real roster (and add a
+  // "photo" to each once you have individual shots).
+  groomsmen: [
+    { name: "Groomsman 1", role: "Groomsman" },
+    { name: "Groomsman 2", role: "Groomsman" },
+    { name: "Groomsman 3", role: "Groomsman" },
+    { name: "Groomsman 4", role: "Groomsman" },
+  ],
+  bridesmaids: [
+    { name: "Bridesmaid 1", role: "Bridesmaid" },
+    { name: "Bridesmaid 2", role: "Bridesmaid" },
+    { name: "Bridesmaid 3", role: "Bridesmaid" },
+    { name: "Bridesmaid 4", role: "Bridesmaid" },
+  ],
   planners: [],
 };
 
