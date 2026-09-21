@@ -4,7 +4,12 @@
 // { name: "Jane Doe", role: "Maid of Honor", photo: "assets/images/jane-web.jpg" }
 const BRIDAL_PARTY = {
   bride: { name: "Clèda Mputu", role: "Bride", photo: "assets/images/_DSC4849_Bride-web.jpg" },
-  groom: { name: "Denis Kalala", role: "Groom", photo: "assets/images/_DSC4909_Groom-web.jpg" },
+  groom: {
+    name: "Denis Kalala",
+    role: "Groom",
+    photo: "assets/images/_DSC4909_Groom-web.jpg",
+    imagePosition: "38% center",
+  },
   // TODO: swap these placeholder names for the real roster.
   groomsmen: [
     { name: "Groomsman 3", role: "Best Man", photo: "assets/images/groomsman_3.png" },
@@ -28,6 +33,7 @@ const BRIDAL_PARTY = {
       role: "Monique & Enoch, Wedding Planners",
       instagram: "https://www.instagram.com/emoplanner/",
       photo: "assets/images/Wedding_Planners.png",
+      fit: "contain",
     },
   ],
 };
@@ -66,6 +72,8 @@ function buildInstagramLink(member, extraClass) {
 
     if (member.photo) {
       modalImage.src = member.photo;
+      modalImage.style.objectFit = member.fit || "cover";
+      modalImage.style.objectPosition = member.imagePosition || "center";
       modalImage.hidden = false;
       modalPlaceholder.hidden = true;
     } else {
@@ -121,6 +129,8 @@ function buildInstagramLink(member, extraClass) {
       img.src = member.photo;
       img.alt = "";
       img.loading = "lazy";
+      if (member.fit) img.style.objectFit = member.fit;
+      if (member.imagePosition) img.style.objectPosition = member.imagePosition;
       photo.appendChild(img);
     } else {
       const placeholder = document.createElement("div");
