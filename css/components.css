@@ -306,11 +306,26 @@
   justify-content: center;
 }
 
+.party-grid-couple {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(180px, 260px));
+  gap: 32px;
+  justify-content: center;
+}
+
 .party-card {
   text-align: center;
+  cursor: pointer;
+}
+
+.party-card:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 4px;
+  border-radius: var(--radius-md);
 }
 
 .party-photo {
+  position: relative;
   aspect-ratio: 1;
   border-radius: var(--radius-md);
   overflow: hidden;
@@ -338,10 +353,37 @@
   padding: 12px;
 }
 
+.party-photo-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    to top,
+    rgba(42, 30, 27, 0.8) 0%,
+    rgba(42, 30, 27, 0.35) 55%,
+    rgba(42, 30, 27, 0.05) 100%
+  );
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.party-card:hover .party-photo-overlay,
+.party-card:focus-visible .party-photo-overlay,
+.party-card.is-active .party-photo-overlay {
+  opacity: 1;
+}
+
+.party-photo-overlay .party-name {
+  color: var(--color-cream);
+  padding: 0 12px;
+}
+
 .party-name {
   font-family: var(--font-script);
   font-size: 1.5rem;
-  color: var(--color-plum);
+  text-align: center;
 }
 
 .party-role {
