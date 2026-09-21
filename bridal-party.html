@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bridal Party | Denis &amp; Clèda</title>
+  <meta name="description" content="Meet the bridal party standing by Denis and Clèda on their wedding day." />
+
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+
+  <!-- ================= Nav ================= -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-monogram">D&amp;C</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#rsvp">RSVP</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ================= Bridal party ================= -->
+  <section class="section page-section-first">
+    <div class="container">
+      <h1 class="section-title">Bridal Party</h1>
+      <p class="section-subtitle">Standing by our side</p>
+
+      <h2 class="party-group-title">Bridesmaids</h2>
+      <div id="bridesmaids-grid" class="party-grid"></div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <h2 class="party-group-title">Groomsmen</h2>
+      <div id="groomsmen-grid" class="party-grid"></div>
+    </div>
+  </section>
+
+  <!-- ================= Footer ================= -->
+  <footer class="footer">
+    <div class="footer-monogram">D&amp;C</div>
+    <p id="footer-date"></p>
+    <p class="footer-hashtag" id="footer-hashtag"></p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/bridal-party.js"></script>
+  <script>
+    (function () {
+      if (typeof WEDDING_CONFIG === "undefined") return;
+      const set = (id, text) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = text;
+      };
+      set("footer-date", `${WEDDING_CONFIG.displayDate} · ${WEDDING_CONFIG.location}`);
+      set("footer-hashtag", WEDDING_CONFIG.hashtag);
+    })();
+  </script>
+</body>
+</html>

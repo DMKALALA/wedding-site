@@ -18,10 +18,8 @@ const WEDDING_CONFIG = {
   venue: "Triple Crown Pavilion, 1780 Plantside Dr, Louisville, KY 40299",
   receptionVenue: "Triple Crown Pavilion, 1780 Plantside Dr, Louisville, KY 40299",
 
-  ceremonyTime: "2:00 PM",
   ceremonyWindow: "2:00 – 3:00 PM",
   cocktailWindow: "3:00 – 4:30 PM",
-  receptionTime: "4:30 PM",
   receptionWindow: "4:30 – 10:00 PM",
   rsvpDeadline: "May 1, 2027", // TODO
 

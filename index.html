@@ -43,9 +43,9 @@
       <a href="#home" class="nav-monogram">D&amp;C</a>
       <ul class="nav-links">
         <li><a href="#details">Details</a></li>
-        <li><a href="#schedule">Schedule</a></li>
         <li><a href="#gallery">Gallery</a></li>
         <li><a href="gallery-full.html">All Photos</a></li>
+        <li><a href="bridal-party.html">Bridal Party</a></li>
         <li><a href="#faq">FAQ</a></li>
         <li><a href="#rsvp">RSVP</a></li>
       </ul>
@@ -73,13 +73,19 @@
         <div class="details-card">
           <div class="details-card-icon">&#10052;</div>
           <h3>Ceremony</h3>
-          <p id="details-ceremony-time"></p>
+          <p id="details-ceremony-window"></p>
           <p id="details-venue"></p>
+        </div>
+        <div class="details-card">
+          <div class="details-card-icon">&#127864;</div>
+          <h3>Cocktail Hour</h3>
+          <p id="details-cocktail-window"></p>
+          <p>Drinks &amp; light bites in the garden</p>
         </div>
         <div class="details-card">
           <div class="details-card-icon">&#127881;</div>
           <h3>Reception</h3>
-          <p id="details-reception-time"></p>
+          <p id="details-reception-window"></p>
           <p id="details-location-2"></p>
         </div>
         <div class="details-card">
@@ -87,35 +93,6 @@
           <h3>RSVP by</h3>
           <p id="details-rsvp-deadline"></p>
           <p><a href="#rsvp" class="btn-link">Respond below</a></p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ================= Schedule ================= -->
-  <section id="schedule" class="section" style="padding-top:0;">
-    <div class="container">
-      <h2 class="section-title">Schedule</h2>
-      <p class="section-subtitle">A quick look at the day</p>
-
-      <div class="details-cards">
-        <div class="details-card">
-          <div class="details-card-icon">&#10052;</div>
-          <h3>Ceremony</h3>
-          <p id="schedule-ceremony-window"></p>
-          <p id="schedule-ceremony-venue"></p>
-        </div>
-        <div class="details-card">
-          <div class="details-card-icon">&#127864;</div>
-          <h3>Cocktail Hour</h3>
-          <p id="schedule-cocktail-window"></p>
-          <p>Drinks &amp; light bites in the garden</p>
-        </div>
-        <div class="details-card">
-          <div class="details-card-icon">&#127881;</div>
-          <h3>Reception</h3>
-          <p id="schedule-reception-window"></p>
-          <p id="schedule-reception-venue"></p>
         </div>
       </div>
     </div>
@@ -302,17 +279,13 @@
       set("hero-date", `${WEDDING_CONFIG.displayDate} — ${WEDDING_CONFIG.location}`);
       set("details-date", WEDDING_CONFIG.displayDate);
       set("details-location", WEDDING_CONFIG.location);
-      set("details-ceremony-time", WEDDING_CONFIG.ceremonyTime);
+      set("details-ceremony-window", WEDDING_CONFIG.ceremonyWindow);
       set("details-venue", WEDDING_CONFIG.venue);
-      set("details-reception-time", WEDDING_CONFIG.receptionTime);
+      set("details-cocktail-window", WEDDING_CONFIG.cocktailWindow);
+      set("details-reception-window", WEDDING_CONFIG.receptionWindow);
       set("details-location-2", WEDDING_CONFIG.receptionVenue);
       set("details-rsvp-deadline", WEDDING_CONFIG.rsvpDeadline);
       set("rsvp-deadline-subtitle", `Kindly respond by ${WEDDING_CONFIG.rsvpDeadline}`);
-      set("schedule-ceremony-window", WEDDING_CONFIG.ceremonyWindow);
-      set("schedule-ceremony-venue", WEDDING_CONFIG.venue);
-      set("schedule-cocktail-window", WEDDING_CONFIG.cocktailWindow);
-      set("schedule-reception-window", WEDDING_CONFIG.receptionWindow);
-      set("schedule-reception-venue", WEDDING_CONFIG.receptionVenue);
       set("footer-date", `${WEDDING_CONFIG.displayDate} · ${WEDDING_CONFIG.location}`);
       set("footer-hashtag", WEDDING_CONFIG.hashtag);
     })();
