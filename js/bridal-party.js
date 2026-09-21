@@ -34,7 +34,7 @@ const BRIDAL_PARTY = {
       instagram: "https://www.instagram.com/emoplanner/",
       photo: "assets/images/Wedding_Planners.png",
       fit: "contain",
-      circleCard: true,
+      squarePhoto: true,
     },
   ],
 };
@@ -63,6 +63,7 @@ function buildInstagramLink(member, extraClass) {
   const modalName = document.getElementById("party-modal-name");
   const modalRole = document.getElementById("party-modal-role");
   const modalInstagram = document.getElementById("party-modal-instagram");
+  const modalPhoto = document.getElementById("party-modal-photo");
   const modalClose = document.getElementById("party-modal-close");
 
   let lastFocused = null;
@@ -81,6 +82,8 @@ function buildInstagramLink(member, extraClass) {
       modalImage.hidden = true;
       modalPlaceholder.hidden = false;
     }
+    modalPhoto.classList.toggle("party-modal-photo-square", !!member.squarePhoto);
+
     modalName.textContent = member.name;
     modalRole.textContent = member.role;
 
@@ -124,7 +127,6 @@ function buildInstagramLink(member, extraClass) {
 
     const photo = document.createElement("div");
     photo.className = "party-photo";
-    if (member.circleCard) photo.classList.add("party-photo-circle");
 
     if (member.photo) {
       const img = document.createElement("img");
