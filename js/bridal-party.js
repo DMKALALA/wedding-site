@@ -7,7 +7,7 @@ const BRIDAL_PARTY = {
   groom: { name: "Denis Kalala", role: "Groom", photo: "assets/images/_DSC4909_Groom-web.jpg" },
   // TODO: swap these placeholder names for the real roster.
   groomsmen: [
-    { name: "Groomsman 3", role: "Groomsman", photo: "assets/images/groomsman_3.png" },
+    { name: "Groomsman 3", role: "Best Man", photo: "assets/images/groomsman_3.png" },
     { name: "Groomsman 5", role: "Groomsman", photo: "assets/images/groomsman_5.png" },
     { name: "Groomsman 7", role: "Groomsman", photo: "assets/images/groomsman_7.png" },
     { name: "Groomsman 8", role: "Groomsman", photo: "assets/images/groomsman_8.png" },
@@ -15,9 +15,9 @@ const BRIDAL_PARTY = {
     { name: "Groomsman 10", role: "Groomsman", photo: "assets/images/groomsman_10.png" },
   ],
   bridesmaids: [
-    { name: "Bridesmaid 1", role: "Bridesmaid", photo: "assets/images/bridesmaid_1.png" },
+    { name: "Bridesmaid 3", role: "Maid of Honor", photo: "assets/images/bridesmaid_3.png" },
     { name: "Bridesmaid 2", role: "Bridesmaid", photo: "assets/images/bridesmaid_2.png" },
-    { name: "Bridesmaid 3", role: "Bridesmaid", photo: "assets/images/bridesmaid_3.png" },
+    { name: "Bridesmaid 1", role: "Bridesmaid", photo: "assets/images/bridesmaid_1.png" },
     { name: "Bridesmaid 4", role: "Bridesmaid", photo: "assets/images/bridesmaid_4.png" },
     { name: "Bridesmaid 5", role: "Bridesmaid", photo: "assets/images/bridesmaid_5.png" },
     { name: "Bridesmaid 6", role: "Bridesmaid", photo: "assets/images/bridesmaid_6.png" },
@@ -26,6 +26,52 @@ const BRIDAL_PARTY = {
 };
 
 (function () {
+  const modal = document.getElementById("party-modal");
+  const modalImage = document.getElementById("party-modal-image");
+  const modalPlaceholder = document.getElementById("party-modal-placeholder");
+  const modalName = document.getElementById("party-modal-name");
+  const modalRole = document.getElementById("party-modal-role");
+  const modalClose = document.getElementById("party-modal-close");
+
+  let lastFocused = null;
+
+  function openModal(member) {
+    if (!modal) return;
+    lastFocused = document.activeElement;
+
+    if (member.photo) {
+      modalImage.src = member.photo;
+      modalImage.hidden = false;
+      modalPlaceholder.hidden = true;
+    } else {
+      modalImage.hidden = true;
+      modalPlaceholder.hidden = false;
+    }
+    modalName.textContent = member.name;
+    modalRole.textContent = member.role;
+
+    modal.classList.add("is-open");
+    document.body.classList.add("no-scroll");
+    modalClose.focus();
+  }
+
+  function closeModal() {
+    if (!modal) return;
+    modal.classList.remove("is-open");
+    document.body.classList.remove("no-scroll");
+    if (lastFocused) lastFocused.focus();
+  }
+
+  if (modal) {
+    modalClose.addEventListener("click", closeModal);
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) closeModal();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && modal.classList.contains("is-open")) closeModal();
+    });
+  }
+
   function buildCard(member) {
     const card = document.createElement("div");
     card.className = "party-card";
@@ -64,12 +110,11 @@ const BRIDAL_PARTY = {
     card.appendChild(photo);
     card.appendChild(role);
 
-    const toggle = () => card.classList.toggle("is-active");
-    card.addEventListener("click", toggle);
+    card.addEventListener("click", () => openModal(member));
     card.addEventListener("keydown", (event) => {
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
-        toggle();
+        openModal(member);
       }
     });
 

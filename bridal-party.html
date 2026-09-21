@@ -27,7 +27,7 @@
   <section class="section page-section-first">
     <div class="container">
       <h1 class="section-title">Bridal Party</h1>
-      <p class="section-subtitle">Tap or hover on a photo to see who's who</p>
+      <p class="section-subtitle">Tap a photo to see who's who</p>
 
       <div id="couple-grid" class="party-grid-couple"></div>
     </div>
@@ -53,6 +53,19 @@
       <div id="planners-grid" class="party-grid"></div>
     </div>
   </section>
+
+  <!-- ================= Party member modal ================= -->
+  <div id="party-modal" class="party-modal" role="dialog" aria-modal="true" aria-label="Bridal party member">
+    <button id="party-modal-close" class="party-modal-close" aria-label="Close">&times;</button>
+    <div class="party-modal-card">
+      <div class="party-modal-photo">
+        <img id="party-modal-image" class="party-modal-image" src="" alt="" />
+        <div id="party-modal-placeholder" class="party-photo-placeholder" hidden>Photo coming soon</div>
+      </div>
+      <p id="party-modal-name" class="party-modal-name"></p>
+      <p id="party-modal-role" class="party-modal-role"></p>
+    </div>
+  </div>
 
   <!-- ================= Footer ================= -->
   <footer class="footer">
