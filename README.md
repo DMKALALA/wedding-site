@@ -2,7 +2,7 @@
 
 This is my wedding website — Denis Kalala & Clèda Mputu.
 
-**Live site:** https://heroic-mousse-e52254.netlify.app
+**Live site:** https://denisandcledaweddingday.netlify.app
 
 The site opens with a Greenvelope-style envelope animation (click or tap to
 break the seal and reveal the invitation), then leads into the homepage with
