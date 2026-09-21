@@ -4,7 +4,10 @@ node_modules/
 .netlify/
 
 # Camera-original photos: huge and not web-usable directly.
-# Only the resized *-web.jpg copies in assets/images/ are tracked.
+# Only the resized *-web.jpg copies, and the pre-cropped bridal party
+# headshots, are tracked.
 assets/images/*
 !assets/images/*-web.jpg
+!assets/images/bridesmaid_*.png
+!assets/images/groomsman_*.png
 !assets/images/.gitkeep

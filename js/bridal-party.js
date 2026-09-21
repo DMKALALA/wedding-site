@@ -5,19 +5,22 @@
 const BRIDAL_PARTY = {
   bride: { name: "Clèda Mputu", role: "Bride", photo: "assets/images/_DSC4849_Bride-web.jpg" },
   groom: { name: "Denis Kalala", role: "Groom", photo: "assets/images/_DSC4909_Groom-web.jpg" },
-  // TODO: swap these placeholder names for the real roster (and add a
-  // "photo" to each once you have individual shots).
+  // TODO: swap these placeholder names for the real roster.
   groomsmen: [
-    { name: "Groomsman 1", role: "Groomsman" },
-    { name: "Groomsman 2", role: "Groomsman" },
-    { name: "Groomsman 3", role: "Groomsman" },
-    { name: "Groomsman 4", role: "Groomsman" },
+    { name: "Groomsman 3", role: "Groomsman", photo: "assets/images/groomsman_3.png" },
+    { name: "Groomsman 5", role: "Groomsman", photo: "assets/images/groomsman_5.png" },
+    { name: "Groomsman 7", role: "Groomsman", photo: "assets/images/groomsman_7.png" },
+    { name: "Groomsman 8", role: "Groomsman", photo: "assets/images/groomsman_8.png" },
+    { name: "Groomsman 9", role: "Groomsman", photo: "assets/images/groomsman_9.png" },
+    { name: "Groomsman 10", role: "Groomsman", photo: "assets/images/groomsman_10.png" },
   ],
   bridesmaids: [
-    { name: "Bridesmaid 1", role: "Bridesmaid" },
-    { name: "Bridesmaid 2", role: "Bridesmaid" },
-    { name: "Bridesmaid 3", role: "Bridesmaid" },
-    { name: "Bridesmaid 4", role: "Bridesmaid" },
+    { name: "Bridesmaid 1", role: "Bridesmaid", photo: "assets/images/bridesmaid_1.png" },
+    { name: "Bridesmaid 2", role: "Bridesmaid", photo: "assets/images/bridesmaid_2.png" },
+    { name: "Bridesmaid 3", role: "Bridesmaid", photo: "assets/images/bridesmaid_3.png" },
+    { name: "Bridesmaid 4", role: "Bridesmaid", photo: "assets/images/bridesmaid_4.png" },
+    { name: "Bridesmaid 5", role: "Bridesmaid", photo: "assets/images/bridesmaid_5.png" },
+    { name: "Bridesmaid 6", role: "Bridesmaid", photo: "assets/images/bridesmaid_6.png" },
   ],
   planners: [],
 };
