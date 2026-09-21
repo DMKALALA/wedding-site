@@ -69,11 +69,29 @@ has a two-line switch near the top to point at Formspree instead.
 
 ## Deploying
 
-The site is static, so any static host works. For Netlify:
+### GitHub Pages
+
+This repo includes `.github/workflows/deploy-pages.yml`, which deploys the site
+to GitHub Pages on every push to `main`.
+
+1. Push this repo to GitHub.
+2. In GitHub, go to **Settings → Pages**.
+3. Under **Build and deployment**, set **Source** to **GitHub Actions**.
+4. Push to `main` (or run the workflow manually from the Actions tab).
+
+Once complete, your site will be live at:
+`https://<your-username>.github.io/wedding-site/`
+
+> Note: GitHub Pages does not support Netlify Forms. If you stay on GitHub
+> Pages, switch `js/rsvp.js` to Formspree mode.
+
+### Netlify (optional)
+
+If you prefer Netlify, keep using `netlify.toml`:
 
 1. Push this repo to GitHub.
 2. Create a new site on Netlify from the repo.
-3. Leave the build command empty and the publish directory as `.`.
+3. Leave the build command empty and publish directory as `.`.
 4. Netlify will automatically pick up the RSVP form.
 
 ## Accessibility notes
