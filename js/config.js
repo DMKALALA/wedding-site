@@ -10,12 +10,19 @@ const WEDDING_CONFIG = {
 
   // Human-readable strings shown in the hero and details section.
   displayDate: "June 12, 2027", // TODO
-  displayTime: "4:00 PM", // TODO
-  location: "Cincinnati, Ohio", // TODO
-  venue: "Venue name TBD", // TODO
+  displayTime: "2:00 PM",
+  location: "Louisville, Kentucky",
 
-  ceremonyTime: "4:00 PM", // TODO
-  receptionTime: "6:00 PM", // TODO
+  // Placeholder: ceremony venue not finalized yet, using the reception
+  // venue for both until a separate ceremony location is booked.
+  venue: "Triple Crown Pavilion, 1780 Plantside Dr, Louisville, KY 40299",
+  receptionVenue: "Triple Crown Pavilion, 1780 Plantside Dr, Louisville, KY 40299",
+
+  ceremonyTime: "2:00 PM",
+  ceremonyWindow: "2:00 – 3:00 PM",
+  cocktailWindow: "3:00 – 4:30 PM",
+  receptionTime: "4:30 PM",
+  receptionWindow: "4:30 – 10:00 PM",
   rsvpDeadline: "May 1, 2027", // TODO
 
   invitationMessage:
