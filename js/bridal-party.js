@@ -27,6 +27,7 @@ const BRIDAL_PARTY = {
       name: "EmoPlanner",
       role: "Monique & Enoch, Wedding Planners",
       instagram: "https://www.instagram.com/emoplanner/",
+      photo: "assets/images/Wedding_Planners.png",
     },
   ],
 };
