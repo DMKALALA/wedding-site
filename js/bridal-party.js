@@ -22,8 +22,31 @@ const BRIDAL_PARTY = {
     { name: "Bridesmaid 5", role: "Bridesmaid", photo: "assets/images/bridesmaid_5.png" },
     { name: "Bridesmaid 6", role: "Bridesmaid", photo: "assets/images/bridesmaid_6.png" },
   ],
-  planners: [],
+  planners: [
+    {
+      name: "EmoPlanner",
+      role: "Monique & Enoch, Wedding Planners",
+      instagram: "https://www.instagram.com/emoplanner/",
+    },
+  ],
 };
+
+const INSTAGRAM_ICON_SVG =
+  '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">' +
+  '<path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.9.2 2.3.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.3 1 .4 2.3.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.2 1.9-.4 2.3-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .3-2.3.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.9-.2-2.3-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.3-1-.4-2.3C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.2-1.9.4-2.3.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.3 2.3-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.7.1-1 .1-1.6.2-1.9.3-.5.2-.8.4-1.1.7-.3.3-.5.6-.7 1.1-.1.3-.3.9-.3 1.9C3.2 8.5 3.2 8.9 3.2 12s0 3.5.1 4.7c.1 1 .2 1.6.3 1.9.2.5.4.8.7 1.1.3.3.6.5 1.1.7.3.1.9.3 1.9.3 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1-.1 1.6-.2 1.9-.3.5-.2.8-.4 1.1-.7.3-.3.5-.6.7-1.1.1-.3.3-.9.3-1.9.1-1.2.1-1.6.1-4.7s0-3.5-.1-4.7c-.1-1-.2-1.6-.3-1.9-.2-.5-.4-.8-.7-1.1-.3-.3-.6-.5-1.1-.7-.3-.1-.9-.3-1.9-.3-1.2-.1-1.6-.1-4.7-.1zm0 3.5a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9zm0 1.8a2.7 2.7 0 1 0 0 5.4 2.7 2.7 0 0 0 0-5.4zm5.7-2a1.05 1.05 0 1 1-2.1 0 1.05 1.05 0 0 1 2.1 0z"/>' +
+  "</svg>";
+
+function buildInstagramLink(member, extraClass) {
+  const link = document.createElement("a");
+  link.href = member.instagram;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.className = `party-instagram-link ${extraClass}`;
+  link.setAttribute("aria-label", `View ${member.name} on Instagram`);
+  link.innerHTML = INSTAGRAM_ICON_SVG;
+  link.addEventListener("click", (event) => event.stopPropagation());
+  return link;
+}
 
 (function () {
   const modal = document.getElementById("party-modal");
@@ -31,6 +54,7 @@ const BRIDAL_PARTY = {
   const modalPlaceholder = document.getElementById("party-modal-placeholder");
   const modalName = document.getElementById("party-modal-name");
   const modalRole = document.getElementById("party-modal-role");
+  const modalInstagram = document.getElementById("party-modal-instagram");
   const modalClose = document.getElementById("party-modal-close");
 
   let lastFocused = null;
@@ -49,6 +73,15 @@ const BRIDAL_PARTY = {
     }
     modalName.textContent = member.name;
     modalRole.textContent = member.role;
+
+    const existingLink = modalInstagram.querySelector(".party-instagram-link");
+    if (existingLink) existingLink.remove();
+    if (member.instagram) {
+      modalInstagram.appendChild(buildInstagramLink(member, "party-instagram-link-modal"));
+      modalInstagram.hidden = false;
+    } else {
+      modalInstagram.hidden = true;
+    }
 
     modal.classList.add("is-open");
     document.body.classList.add("no-scroll");
@@ -109,6 +142,9 @@ const BRIDAL_PARTY = {
 
     card.appendChild(photo);
     card.appendChild(role);
+    if (member.instagram) {
+      card.appendChild(buildInstagramLink(member, "party-instagram-link-card"));
+    }
 
     card.addEventListener("click", () => openModal(member));
     card.addEventListener("keydown", (event) => {
