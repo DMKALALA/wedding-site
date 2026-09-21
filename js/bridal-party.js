@@ -8,7 +8,7 @@ const BRIDAL_PARTY = {
     name: "Denis Kalala",
     role: "Groom",
     photo: "assets/images/_DSC4909_Groom-web.jpg",
-    imagePosition: "38% center",
+    imagePosition: "10% center",
   },
   // TODO: swap these placeholder names for the real roster.
   groomsmen: [
@@ -34,6 +34,7 @@ const BRIDAL_PARTY = {
       instagram: "https://www.instagram.com/emoplanner/",
       photo: "assets/images/Wedding_Planners.png",
       fit: "contain",
+      circleCard: true,
     },
   ],
 };
@@ -123,6 +124,7 @@ function buildInstagramLink(member, extraClass) {
 
     const photo = document.createElement("div");
     photo.className = "party-photo";
+    if (member.circleCard) photo.classList.add("party-photo-circle");
 
     if (member.photo) {
       const img = document.createElement("img");
