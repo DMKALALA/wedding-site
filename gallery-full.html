@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All Photos | Denis &amp; Clèda</title>
+  <meta name="description" content="All the engagement photos from Denis Kalala and Clèda Mputu's wedding." />
+
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+  <link rel="stylesheet" href="css/components.css" />
+</head>
+<body>
+
+  <!-- ================= Nav ================= -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-monogram">D&amp;C</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#rsvp">RSVP</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ================= All photos ================= -->
+  <section class="section page-section-first">
+    <div class="container">
+      <h1 class="section-title">All Photos</h1>
+      <p class="section-subtitle">Every moment from the shoot</p>
+
+      <div id="full-gallery-grid" class="gallery-grid"></div>
+    </div>
+  </section>
+
+  <!-- ================= Gallery lightbox ================= -->
+  <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+    <button id="lightbox-close" class="lightbox-close" aria-label="Close photo viewer">&times;</button>
+    <button id="lightbox-prev" class="lightbox-nav lightbox-prev" aria-label="Previous photo">&#8249;</button>
+    <img id="lightbox-image" class="lightbox-image" src="" alt="" />
+    <button id="lightbox-next" class="lightbox-nav lightbox-next" aria-label="Next photo">&#8250;</button>
+  </div>
+
+  <!-- ================= Footer ================= -->
+  <footer class="footer">
+    <div class="footer-monogram">D&amp;C</div>
+    <p id="footer-date"></p>
+    <p class="footer-hashtag" id="footer-hashtag"></p>
+  </footer>
+
+  <script src="js/config.js"></script>
+  <script src="js/lightbox.js"></script>
+  <script src="js/gallery-grid.js"></script>
+  <script src="js/full-gallery.js"></script>
+  <script>
+    (function () {
+      if (typeof WEDDING_CONFIG === "undefined") return;
+      const set = (id, text) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = text;
+      };
+      set("footer-date", `${WEDDING_CONFIG.displayDate} · ${WEDDING_CONFIG.location}`);
+      set("footer-hashtag", WEDDING_CONFIG.hashtag);
+    })();
+  </script>
+</body>
+</html>
