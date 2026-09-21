@@ -17,6 +17,28 @@
     cardDate.textContent = WEDDING_CONFIG.displayDate;
   }
 
+  // Arriving with a link to a specific section (e.g. nav links from the
+  // full gallery page, or a direct #rsvp link) should land there directly
+  // instead of forcing the intro animation again.
+  const targetHash = window.location.hash;
+  if (targetHash && targetHash !== "#" && targetHash !== "#home") {
+    overlay.remove();
+    const target = document.querySelector(targetHash);
+    if (target) {
+      // Jump instantly (bypassing the page's smooth-scroll CSS, which
+      // would otherwise animate toward a target whose position is still
+      // shifting) once web fonts have finished loading and swapping in,
+      // since that's what moves section positions during initial load.
+      const jump = () => target.scrollIntoView({ behavior: "instant" });
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => requestAnimationFrame(jump));
+      } else {
+        requestAnimationFrame(jump);
+      }
+    }
+    return;
+  }
+
   document.body.classList.add("no-scroll");
 
   function openEnvelope() {
