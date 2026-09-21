@@ -316,14 +316,29 @@
 .party-row {
   display: flex;
   flex-wrap: nowrap;
-  justify-content: safe center;
-  gap: 24px;
-  overflow-x: auto;
-  padding: 4px 4px 12px;
+  justify-content: center;
+  gap: clamp(8px, 3vw, 24px);
 }
 
 .party-row .party-card {
-  flex: 0 0 180px;
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 180px;
+}
+
+.party-row .party-role {
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 640px) {
+  .party-row .party-name {
+    font-size: 1.1rem;
+  }
+
+  .party-row .party-role {
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+  }
 }
 
 .party-card {
