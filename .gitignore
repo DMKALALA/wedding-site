@@ -2,6 +2,8 @@
 Thumbs.db
 node_modules/
 .netlify/
+.env
+.env.*
 
 # Camera-original photos: huge and not web-usable directly.
 # Only the resized *-web.jpg copies, and the pre-cropped bridal party

@@ -1,5 +1,3 @@
 [build]
   publish = "."
-
-[[forms]]
-  name = "rsvp"
+  functions = "netlify/functions"

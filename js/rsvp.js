@@ -4,24 +4,11 @@
 
   const status = document.getElementById("rsvp-status");
 
-  // --- Hosting switch -----------------------------------------------
-  // Netlify Forms (default): works automatically once deployed on
-  // Netlify, no endpoint needed — Netlify detects the form at build time
-  // because of the data-netlify="true" attribute on the <form> in
-  // index.html.
-  //
-  // Using a different host? Switch to Formspree instead:
-  //   1. Set FORM_ENDPOINT below to your Formspree endpoint,
-  //      e.g. "https://formspree.io/f/xxxxxxx"
-  //   2. Set USE_NETLIFY to false.
-  const USE_NETLIFY = true;
-  const FORM_ENDPOINT = ""; // Formspree endpoint, if USE_NETLIFY is false
-
-  function encode(data) {
-    return Object.keys(data)
-      .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
-      .join("&");
-  }
+  // Submissions are verified against the guest list and stored via the
+  // Netlify Function at netlify/functions/rsvp.js (backed by Supabase —
+  // see supabase/schema.sql and README for setup). Guests attending get
+  // their auto-assigned reception table number back in the response.
+  const ENDPOINT = "/.netlify/functions/rsvp";
 
   function setStatus(state, message) {
     status.textContent = message;
@@ -34,34 +21,57 @@
     // Honeypot: if this hidden field has a value, silently drop the
     // submission (a real visitor never fills it in).
     const honeypot = form.querySelector('[name="bot-field"]');
-    if (honeypot && honeypot.value) {
-      return;
-    }
+    const isBot = !!(honeypot && honeypot.value);
 
     const formData = new FormData(form);
     const submitBtn = form.querySelector('button[type="submit"]');
     submitBtn.disabled = true;
-    setStatus("pending", "Sending your RSVP…");
+    setStatus("pending", "Checking your invitation…");
 
     try {
-      if (USE_NETLIFY) {
-        const data = {};
-        formData.forEach((value, key) => (data[key] = value));
-        await fetch("/", {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: encode(data),
-        });
-      } else {
-        const response = await fetch(FORM_ENDPOINT, {
-          method: "POST",
-          headers: { Accept: "application/json" },
-          body: formData,
-        });
-        if (!response.ok) throw new Error("Submission failed");
+      const response = await fetch(ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.get("name"),
+          email: formData.get("email"),
+          attending: formData.get("attending"),
+          guests: formData.get("guests"),
+          message: formData.get("message"),
+          botField: isBot,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        if (result.error === "not_found") {
+          setStatus(
+            "error",
+            "We couldn't find that name and email on our guest list. Please double check what you entered, or reach out to us directly."
+          );
+        } else {
+          throw new Error(result.error || "request_failed");
+        }
+        return;
       }
 
-      setStatus("success", "Thank you! Your RSVP has been received.");
+      if (result.attending) {
+        if (result.tableNumber) {
+          setStatus(
+            "success",
+            `You're confirmed! We can't wait to celebrate with you — you've been seated at Table ${result.tableNumber}.`
+          );
+        } else {
+          setStatus(
+            "success",
+            "You're confirmed! We're finalizing seating and will follow up with your table assignment soon."
+          );
+        }
+      } else {
+        setStatus("success", "Thanks for letting us know — you'll be missed!");
+      }
+
       form.reset();
     } catch (error) {
       setStatus("error", "Something went wrong. Please try again or reach out directly.");
