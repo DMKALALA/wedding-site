@@ -6,21 +6,24 @@
 
 -- ------------------------------------------------------------------
 -- guests: the master invite list. One row per invitation, which may
--- represent a single person or a whole family/party. This is what
--- guest RSVP submissions are verified against, by invite_code (not
--- email — you often won't have every guest's email up front). Give
--- each guest/family their code however you like: printed on the
--- invitation, texted, etc.
+-- represent a single person or a whole family/party. The whole
+-- wedding shares a single invite code (set via the WEDDING_INVITE_CODE
+-- Netlify env var, not stored here) — that just gates the RSVP form.
+-- Once through, a submission is matched to a specific row here by
+-- full_name (exact match, case-insensitive), so make sure each row's
+-- name is exactly what that guest will type.
 -- ------------------------------------------------------------------
 create table if not exists guests (
   id uuid primary key default gen_random_uuid(),
   full_name text not null,
-  invite_code text not null,
   email text,                              -- optional, just for your records
   party_size int not null default 1,       -- max guests this invite covers
-  created_at timestamptz not null default now(),
-  unique (invite_code)
+  created_at timestamptz not null default now()
 );
+
+-- Case-insensitive uniqueness on name, so lookups are unambiguous.
+create unique index if not exists guests_full_name_lower_idx
+  on guests (lower(trim(full_name)));
 
 -- ------------------------------------------------------------------
 -- tables: reception seating. Adjust the seed data at the bottom to

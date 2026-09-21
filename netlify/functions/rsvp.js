@@ -1,18 +1,22 @@
 // Netlify Function: POST /.netlify/functions/rsvp
 //
-// Verifies the submitting guest against the `guests` table (by their
-// unique invite code — not email, since not every guest's email is on
-// file), records their response in `rsvps`, and auto-assigns a
-// reception table (via the assign_table() Postgres function) when
-// they're attending.
+// One shared invite code covers the whole wedding (simpler than a
+// unique code per guest — easier to hand out, same event for
+// everyone). That code just gates the form; the specific guest record
+// is then looked up by full name (exact match, case-insensitive)
+// against the `guests` table, which the couple pre-populates. Records
+// the response in `rsvps` and auto-assigns a reception table (via the
+// assign_table() Postgres function) when attending.
 //
 // Requires these Netlify environment variables (Site settings ->
 // Environment variables), never exposed to the browser:
 //   SUPABASE_URL
 //   SUPABASE_SERVICE_ROLE_KEY
+//   WEDDING_INVITE_CODE   (the one shared code, e.g. "DENISANDCLEDA")
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const WEDDING_INVITE_CODE = (process.env.WEDDING_INVITE_CODE || "").trim().toUpperCase();
 
 function jsonResponse(statusCode, body) {
   return {
@@ -63,7 +67,7 @@ exports.handler = async (event) => {
     return jsonResponse(405, { ok: false, error: "method_not_allowed" });
   }
 
-  if (!SUPABASE_URL || !SERVICE_KEY) {
+  if (!SUPABASE_URL || !SERVICE_KEY || !WEDDING_INVITE_CODE) {
     return jsonResponse(500, { ok: false, error: "server_not_configured" });
   }
 
@@ -90,10 +94,16 @@ exports.handler = async (event) => {
     return jsonResponse(400, { ok: false, error: "missing_fields" });
   }
 
+  if (inviteCode !== WEDDING_INVITE_CODE) {
+    return jsonResponse(404, { ok: false, error: "wrong_code" });
+  }
+
   try {
-    // 1. Verify against the invite list, by invite code.
+    // 1. The shared code just gets you in the door; find the specific
+    //    guest record by exact name match (case-insensitive) against
+    //    the couple's pre-populated guest list.
     const guests = await supabaseFetch(
-      `guests?invite_code=eq.${encodeURIComponent(inviteCode)}&select=*`
+      `guests?full_name=ilike.${encodeURIComponent(name)}&select=*`
     );
     const guest = guests && guests[0];
 

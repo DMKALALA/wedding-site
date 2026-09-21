@@ -95,13 +95,12 @@ database. This replaces the earlier Netlify Forms setup.
    your actual floor plan differs (e.g. 25 tables x 8 seats).
 3. **Import your guest list.** Fill in `guests-template.csv` with your
    real 200 guests: one row per invite (a person or a whole family),
-   with `full_name`, `invite_code`, `email` (optional), and `party_size`
-   (how many people that invite covers). `invite_code` is a unique code
-   per invite (6 random letters/digits works well) that you give guests
-   however you like — printed on the invitation, texted, etc. — since
-   you won't necessarily have everyone's email up front. In Supabase,
-   go to *Table Editor > guests > Insert > Import data from CSV* and
-   upload it.
+   with `full_name`, `email` (optional), and `party_size` (how many
+   people that invite covers). **`full_name` must be exactly what that
+   guest will type into the RSVP form** — that's how a submission gets
+   matched to the right row, so make sure it's spelled the way they'd
+   naturally type it. In Supabase, go to *Table Editor > guests >
+   Insert > Import data from CSV* and upload it.
 4. **Get your API credentials.** In Supabase, go to *Project Settings >
    API*. You'll need the **Project URL** and the **service_role**
    secret key (not the `anon` key — the service role key is what lets
@@ -112,16 +111,19 @@ database. This replaces the earlier Netlify Forms setup.
    dashboard: *Site configuration > Environment variables*, add:
    - `SUPABASE_URL` — your Project URL
    - `SUPABASE_SERVICE_ROLE_KEY` — your service_role key
+   - `WEDDING_INVITE_CODE` — one shared code for the whole wedding
+     (e.g. `DENISANDCLEDA`) that you give out to all your guests
+     however you like — printed on invitations, texted, etc.
 6. **Redeploy** so the function picks up the new environment variables.
 
-**How it verifies guests:** a submission is matched by **invite code**
-against the `guests` table (case-insensitive). If no match is found,
-the guest sees a friendly "we couldn't find your invitation" message
-instead of the confirmation. Name and email are intentionally lenient
-(whatever they type is just recorded, email isn't required) — the
-invite code is the one thing you control and hand out yourself, so
-it's the reliable identifier here instead of an email address you may
-not have for every guest.
+**How it verifies guests:** a submission is checked in two steps —
+first the **invite code** must match `WEDDING_INVITE_CODE` (one code
+for everyone, simplest to hand out since it's all one event), then the
+**name** is matched exactly (case-insensitive) against the `guests`
+table to find that specific invite's party size and history. If either
+check fails, the guest sees a friendly error instead of a confirmation.
+Email is optional and never used for matching — just recorded if they
+give it, for your own contact records.
 
 **Tracking responses:** every response lands in the `rsvps` table in
 Supabase (Table Editor, or export to CSV anytime via *Export data* for

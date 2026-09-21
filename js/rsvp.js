@@ -46,10 +46,15 @@
       const result = await response.json();
 
       if (!response.ok) {
-        if (result.error === "not_found") {
+        if (result.error === "wrong_code") {
           setStatus(
             "error",
-            "We couldn't find that invite code. Please double check what you entered, or reach out to us directly."
+            "That invite code doesn't match. Please double check what's on your invitation, or reach out to us directly."
+          );
+        } else if (result.error === "not_found") {
+          setStatus(
+            "error",
+            "We couldn't find that name on our guest list. Please enter it exactly as it appears on your invitation, or reach out to us directly."
           );
         } else {
           throw new Error(result.error || "request_failed");
