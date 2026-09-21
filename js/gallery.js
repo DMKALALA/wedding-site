@@ -8,7 +8,7 @@
     "_DSC4920_pic1-web.jpg",
     "_DSC4877_pic2-web.jpg",
     "DSC09932_pic5-web.jpg",
-    "_DSC4895_hero_-web.jpg",
+    "_DSC4939_Pic3-web.jpg",
   ];
 
   if (photos.length === 0) {
