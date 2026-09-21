@@ -304,9 +304,16 @@
 
 .party-grid-couple {
   display: grid;
-  grid-template-columns: repeat(2, minmax(180px, 260px));
-  gap: 32px;
+  grid-template-columns: repeat(2, minmax(140px, 260px));
+  gap: clamp(12px, 4vw, 32px);
   justify-content: center;
+}
+
+@media (max-width: 420px) {
+  .party-grid-couple {
+    grid-template-columns: minmax(180px, 240px);
+    justify-items: center;
+  }
 }
 
 .party-row {
@@ -499,6 +506,17 @@
 .party-modal-close:hover,
 .party-modal-close:focus-visible {
   opacity: 1;
+}
+
+@media (max-width: 480px) {
+  .party-modal-card {
+    padding: 28px 20px;
+  }
+
+  .party-modal-photo {
+    width: min(160px, 100%);
+    height: 160px;
+  }
 }
 
 .party-instagram-link {

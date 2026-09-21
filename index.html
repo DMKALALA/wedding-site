@@ -41,7 +41,16 @@
   <nav class="nav">
     <div class="nav-inner">
       <a href="#home" class="nav-monogram">D&amp;C</a>
-      <ul class="nav-links">
+      <button
+        id="nav-toggle"
+        class="nav-toggle"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="nav-links"
+      >
+        <span></span><span></span><span></span>
+      </button>
+      <ul id="nav-links" class="nav-links">
         <li><a href="#details">Details</a></li>
         <li><a href="#gallery">Gallery</a></li>
         <li><a href="gallery-full.html">All Photos</a></li>
@@ -260,6 +269,7 @@
   </footer>
 
   <script src="js/config.js"></script>
+  <script src="js/nav.js"></script>
   <script src="js/envelope.js"></script>
   <script src="js/countdown.js"></script>
   <script src="js/lightbox.js"></script>
