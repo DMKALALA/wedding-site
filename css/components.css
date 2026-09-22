@@ -233,12 +233,28 @@
 /* Gallery                                                               */
 /* -------------------------------------------------------------------- */
 .gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
+  --gallery-cols: 4;
+  --gallery-gap: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--gallery-gap);
+}
+
+@media (max-width: 900px) {
+  .gallery-grid {
+    --gallery-cols: 3;
+  }
+}
+
+@media (max-width: 640px) {
+  .gallery-grid {
+    --gallery-cols: 2;
+  }
 }
 
 .gallery-item {
+  flex: 0 0 calc((100% - (var(--gallery-cols) - 1) * var(--gallery-gap)) / var(--gallery-cols));
   aspect-ratio: 1;
   border-radius: var(--radius-md);
   overflow: hidden;
