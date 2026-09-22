@@ -30,7 +30,7 @@ const BRIDAL_PARTY = {
   planners: [
     {
       name: "EmoPlanner",
-      role: "Monique & Enoch, Wedding Planners",
+      role: "Monique & Enoc, Wedding Planners",
       instagram: "https://www.instagram.com/emoplanner/",
       photo: "assets/images/Wedding_Planners.png",
       fit: "contain",
