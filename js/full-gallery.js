@@ -4,7 +4,6 @@
 
   const photos = [
     "2I3A1060-web.jpg",
-    "2I3A1060-2-web.jpg",
     "DSC05078-web.jpg",
     "DSC05183-web.jpg",
     "DSC09907-web.jpg",
