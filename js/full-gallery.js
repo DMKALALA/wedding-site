@@ -14,7 +14,6 @@
     "DSC09920-web.jpg",
     "DSC09932_pic5-web.jpg",
     "_DSC0239-Edit-web.jpg",
-    "_DSC0239-Edit-2-web.jpg",
     "_DSC0239-Edit-3-web.jpg",
     "_DSC4849_Bride-web.jpg",
     "_DSC4850-web.jpg",
