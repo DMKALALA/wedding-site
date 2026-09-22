@@ -12,12 +12,12 @@ const BRIDAL_PARTY = {
   },
   // TODO: swap these placeholder names for the real roster.
   groomsmen: [
-    { name: "Groomsman 3", role: "Best Man", photo: "assets/images/groomsman_3.png" },
-    { name: "Groomsman 5", role: "Groomsman", photo: "assets/images/groomsman_5.png" },
-    { name: "Groomsman 7", role: "Groomsman", photo: "assets/images/groomsman_7.png" },
-    { name: "Groomsman 8", role: "Groomsman", photo: "assets/images/groomsman_8.png" },
-    { name: "Groomsman 9", role: "Groomsman", photo: "assets/images/groomsman_9.png" },
-    { name: "Groomsman 10", role: "Groomsman", photo: "assets/images/groomsman_10.png" },
+    { name: "Joel Ngoy", role: "Best Man", photo: "assets/images/groomsman_3.png" },
+    { name: "Samuel Ntambwe", role: "Groomsman", photo: "assets/images/groomsman_5.png" },
+    { name: "Divin Ilunga", role: "Groomsman", photo: "assets/images/groomsman_7.png" },
+    { name: "Christian Dischueme", role: "Groomsman", photo: "assets/images/groomsman_8.png" },
+    { name: "Jenovic Kalala", role: "Groomsman", photo: "assets/images/groomsman_9.png" },
+    { name: "Michael", role: "Groomsman", photo: "assets/images/groomsman_10.png" },
   ],
   bridesmaids: [
     { name: "Bridesmaid 3", role: "Maid of Honor", photo: "assets/images/bridesmaid_3.png" },
