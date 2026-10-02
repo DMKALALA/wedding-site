@@ -20,12 +20,12 @@ const BRIDAL_PARTY = {
     { name: "Michael", role: "Groomsman", photo: "assets/images/groomsman_10.png" },
   ],
   bridesmaids: [
-    { name: "Bridesmaid 3", role: "Maid of Honor", photo: "assets/images/bridesmaid_3.png" },
-    { name: "Bridesmaid 2", role: "Bridesmaid", photo: "assets/images/bridesmaid_2.png" },
-    { name: "Bridesmaid 1", role: "Bridesmaid", photo: "assets/images/bridesmaid_1.png" },
-    { name: "Bridesmaid 4", role: "Bridesmaid", photo: "assets/images/bridesmaid_4.png" },
-    { name: "Bridesmaid 5", role: "Bridesmaid", photo: "assets/images/bridesmaid_5.png" },
-    { name: "Bridesmaid 6", role: "Bridesmaid", photo: "assets/images/bridesmaid_6.png" },
+    { name: "Benel", role: "Maid of Honor", photo: "assets/images/bridesmaid_3.png" },
+    { name: "Perle", role: "Bridesmaid", photo: "assets/images/bridesmaid_2.png" },
+    { name: "Olapeju", role: "Bridesmaid", photo: "assets/images/bridesmaid_1.png" },
+    { name: "Laureta", role: "Bridesmaid", photo: "assets/images/bridesmaid_4.png" },
+    { name: "Holyness", role: "Bridesmaid", photo: "assets/images/bridesmaid_5.png" },
+    { name: "Shiloh", role: "Bridesmaid", photo: "assets/images/bridesmaid_6.png" },
   ],
   planners: [
     {
