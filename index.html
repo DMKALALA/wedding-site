@@ -295,7 +295,8 @@
 
         <div class="form-row">
           <label for="rsvp-name">Full name</label>
-          <input type="text" id="rsvp-name" name="name" required />
+          <input type="text" id="rsvp-name" name="name" required autocomplete="off" list="rsvp-name-suggestions" />
+          <datalist id="rsvp-name-suggestions"></datalist>
         </div>
 
         <div class="form-row">

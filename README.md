@@ -33,9 +33,11 @@ wedding-site/
 │   └── rsvp.js
 ├── assets/images/
 ├── netlify/functions/
-│   └── rsvp.js              # Guest verification + table assignment (see below)
+│   ├── rsvp.js              # Records RSVPs + table assignment (see below)
+│   └── guest-suggest.js     # Live name suggestions for the RSVP form
 ├── supabase/
-│   └── schema.sql            # Run once in Supabase to set up the RSVP database
+│   ├── schema.sql            # Run once in Supabase to set up the RSVP database
+│   └── migration_open_rsvp.sql # Updates an existing project to the current schema
 ├── guests-template.csv       # Fill in and import as your guest list
 ├── netlify.toml
 ├── .gitignore
@@ -76,11 +78,12 @@ Then visit `http://localhost:8000`.
 
 ## RSVP form + guest list backend
 
-The RSVP form verifies each submission against a real guest list (200
-invites), tracks every response, and auto-assigns each attending
-guest/family a reception table — all via a Netlify Function
-(`netlify/functions/rsvp.js`) backed by a free Supabase Postgres
-database. This replaces the earlier Netlify Forms setup.
+The RSVP form suggests names as guests type (from the couple's real
+guest list), tracks every response, and auto-assigns each attending
+party a reception table — all via two Netlify Functions
+(`netlify/functions/rsvp.js` and `netlify/functions/guest-suggest.js`)
+backed by a free Supabase Postgres database. This replaces the earlier
+Netlify Forms setup.
 
 **One-time setup, before you go live:**
 
@@ -92,21 +95,23 @@ database. This replaces the earlier Netlify Forms setup.
    This creates the `guests`, `rsvps`, and `reception_tables` tables
    plus the table-assignment logic. It seeds 20 tables x 10 seats = 200
    capacity — edit the seed values at the bottom of the file first if
-   your actual floor plan differs (e.g. 25 tables x 8 seats).
+   your actual floor plan differs (e.g. 25 tables x 8 seats). (If you
+   already ran an earlier version of this file against a live project,
+   run `supabase/migration_open_rsvp.sql` instead — it updates the old
+   schema in place without losing data.)
 3. **Import your guest list.** Fill in `guests-template.csv` with your
-   real 200 guests: one row per invite (a person or a whole family),
-   with `full_name`, `email` (optional), and `party_size` (how many
-   people that invite covers). **`full_name` must be exactly what that
-   guest will type into the RSVP form** — that's how a submission gets
-   matched to the right row, so make sure it's spelled the way they'd
-   naturally type it. In Supabase, go to *Table Editor > guests >
-   Insert > Import data from CSV* and upload it.
+   guests — one row per invite, with `full_name`, `email` (optional),
+   and `party_size` (informational only now). This list only powers
+   the live name suggestions on the form as a guest types; it's never
+   a hard gate (see below), so near-enough spelling is fine. In
+   Supabase, go to *Table Editor > guests > Insert > Import data from
+   CSV* and upload it.
 4. **Get your API credentials.** In Supabase, go to *Project Settings >
    API*. You'll need the **Project URL** and the **service_role**
    secret key (not the `anon` key — the service role key is what lets
-   the server-side function verify guests and write RSVPs; it must
-   never be exposed in frontend code, which is why this lives in a
-   Netlify Function instead of `js/rsvp.js`).
+   the server-side functions read the guest list and write RSVPs; it
+   must never be exposed in frontend code, which is why this lives in
+   Netlify Functions instead of `js/rsvp.js`).
 5. **Set Netlify environment variables.** In your Netlify site
    dashboard: *Site configuration > Environment variables*, add:
    - `SUPABASE_URL` — your Project URL
@@ -114,21 +119,28 @@ database. This replaces the earlier Netlify Forms setup.
    - `WEDDING_INVITE_CODE` — one shared code for the whole wedding
      (e.g. `DENISANDCLEDA`) that you give out to all your guests
      however you like — printed on invitations, texted, etc.
-6. **Redeploy** so the function picks up the new environment variables.
+6. **Redeploy** so the functions pick up the new environment variables.
 
-**How it verifies guests:** a submission is checked in two steps —
-first the **invite code** must match `WEDDING_INVITE_CODE` (one code
-for everyone, simplest to hand out since it's all one event), then the
-**name** is matched exactly (case-insensitive) against the `guests`
-table to find that specific invite's party size and history. If either
-check fails, the guest sees a friendly error instead of a confirmation.
-Email is optional and never used for matching — just recorded if they
-give it, for your own contact records.
+**How it verifies guests:** the **invite code** must match
+`WEDDING_INVITE_CODE` (one code for everyone, simplest to hand out
+since it's all one event) — that's the only hard gate. The **name**
+field is never checked against the guest list; anyone who knows the
+invite code can RSVP under any name. As they type, the form calls
+`guest-suggest.js`, which looks up names in `guests` that contain what
+they've typed so far and offers them as suggestions, so guests can
+find the exact spelling the couple has on file — but picking a
+suggestion is optional. Email is optional too, and never used for
+matching — just recorded if they give it, for your own contact
+records.
 
 **Tracking responses:** every response lands in the `rsvps` table in
 Supabase (Table Editor, or export to CSV anytime via *Export data* for
-your own records) — name, email, attending yes/no, guest count,
-message, and assigned table number.
+your own records). Each row is one **attendee**, not one party — a
+family of three attending RSVPs as three rows sharing the same
+`party_key` and `submitted_name`, so the exported CSV is already a
+seating headcount rather than something you have to expand yourself.
+Resubmitting under the same name replaces that party's previous rows
+rather than duplicating them.
 
 **Local testing:** install the [Netlify CLI](https://docs.netlify.com/cli/get-started/)
 (`npm install -g netlify-cli`), then run `netlify dev` from the project

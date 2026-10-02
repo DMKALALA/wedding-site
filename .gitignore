@@ -5,6 +5,10 @@ node_modules/
 .env
 .env.*
 
+# Raw guest list spreadsheet: real personal data, kept local only.
+# guests-template.csv (derived from it) is what's tracked.
+names_list.xlsx
+
 # Camera-original photos: huge and not web-usable directly.
 # Only the resized *-web.jpg copies, and the pre-cropped bridal party
 # headshots, are tracked.

@@ -4,11 +4,44 @@
 
   const status = document.getElementById("rsvp-status");
 
-  // Submissions are verified against the guest list and stored via the
-  // Netlify Function at netlify/functions/rsvp.js (backed by Supabase —
-  // see supabase/schema.sql and README for setup). Guests attending get
-  // their auto-assigned reception table number back in the response.
+  // Submissions are stored via the Netlify Function at
+  // netlify/functions/rsvp.js (backed by Supabase — see supabase/schema.sql
+  // and README for setup). Guests attending get their auto-assigned
+  // reception table number back in the response. A name that isn't on the
+  // guest list is never blocked — the list only powers the live
+  // suggestions below, via netlify/functions/guest-suggest.js.
   const ENDPOINT = "/.netlify/functions/rsvp";
+  const SUGGEST_ENDPOINT = "/.netlify/functions/guest-suggest";
+
+  const nameInput = document.getElementById("rsvp-name");
+  const suggestionsList = document.getElementById("rsvp-name-suggestions");
+  let suggestTimer = null;
+
+  if (nameInput && suggestionsList) {
+    nameInput.addEventListener("input", () => {
+      const query = nameInput.value.trim();
+      clearTimeout(suggestTimer);
+      if (query.length < 2) {
+        suggestionsList.innerHTML = "";
+        return;
+      }
+      suggestTimer = setTimeout(async () => {
+        try {
+          const response = await fetch(`${SUGGEST_ENDPOINT}?q=${encodeURIComponent(query)}`);
+          if (!response.ok) return;
+          const result = await response.json();
+          suggestionsList.innerHTML = "";
+          (result.names || []).forEach((name) => {
+            const option = document.createElement("option");
+            option.value = name;
+            suggestionsList.appendChild(option);
+          });
+        } catch {
+          // Suggestions are a nicety — silently ignore failures.
+        }
+      }, 200);
+    });
+  }
 
   function setStatus(state, message) {
     status.textContent = message;
@@ -75,11 +108,6 @@
             "error",
             "That invite code doesn't match. Please double check what's on your invitation, or reach out to us directly."
           );
-        } else if (result.error === "not_found") {
-          setStatus(
-            "error",
-            "We couldn't find that name on our guest list. Please enter it exactly as it appears on your invitation, or reach out to us directly."
-          );
         } else {
           throw new Error(result.error || "request_failed");
         }
@@ -103,6 +131,7 @@
       }
 
       form.reset();
+      if (suggestionsList) suggestionsList.innerHTML = "";
       celebrateAndScrollHome();
     } catch (error) {
       setStatus("error", "Something went wrong. Please try again or reach out directly.");

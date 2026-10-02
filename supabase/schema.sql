@@ -3,27 +3,26 @@
 -- Run this once in the Supabase SQL Editor (Project > SQL Editor > New query)
 -- before importing your guest list. Safe to re-run: uses IF NOT EXISTS /
 -- CREATE OR REPLACE throughout.
+--
+-- If you already ran an earlier version of this file against a live
+-- project, run supabase/migration_open_rsvp.sql instead -- it transforms
+-- the old schema into this one in place, without losing data.
 
 -- ------------------------------------------------------------------
--- guests: the master invite list. One row per invitation, which may
--- represent a single person or a whole family/party. The whole
--- wedding shares a single invite code (set via the WEDDING_INVITE_CODE
--- Netlify env var, not stored here) — that just gates the RSVP form.
--- Once through, a submission is matched to a specific row here by
--- full_name (exact match, case-insensitive), so make sure each row's
--- name is exactly what that guest will type.
+-- guests: the couple's own roster, used only to power live name
+-- suggestions on the RSVP form (see netlify/functions/guest-suggest.js).
+-- It is NOT a gate -- a guest can RSVP under any name, whether or not
+-- it matches a row here, and the invite code is what actually controls
+-- access. Names are intentionally not unique: two guests can share a
+-- first name, and a plus-one may reuse the invitee's own name.
 -- ------------------------------------------------------------------
 create table if not exists guests (
   id uuid primary key default gen_random_uuid(),
   full_name text not null,
   email text,                              -- optional, just for your records
-  party_size int not null default 1,       -- max guests this invite covers
+  party_size int not null default 1,       -- informational only
   created_at timestamptz not null default now()
 );
-
--- Case-insensitive uniqueness on name, so lookups are unambiguous.
-create unique index if not exists guests_full_name_lower_idx
-  on guests (lower(trim(full_name)));
 
 -- ------------------------------------------------------------------
 -- tables: reception seating. Adjust the seed data at the bottom to
@@ -37,20 +36,26 @@ create table if not exists reception_tables (
 );
 
 -- ------------------------------------------------------------------
--- rsvps: actual guest responses. One row per guest (upserted on
--- re-submission, so guests can update their response).
+-- rsvps: one row per ATTENDING PERSON, not one row per party. A party
+-- of three attending guests becomes three rows that share the same
+-- party_key and submitted_name -- that's how "duplicate their name
+-- for themselves and their plus one" is represented when saving.
+-- party_key (lowercased, trimmed name) identifies a submission so a
+-- guest resubmitting under the same name replaces their previous rows
+-- instead of duplicating them.
 -- ------------------------------------------------------------------
 create table if not exists rsvps (
   id uuid primary key default gen_random_uuid(),
-  guest_id uuid not null references guests(id) on delete cascade unique,
+  party_key text not null,
   submitted_name text not null,
   submitted_email text,
   attending boolean not null,
-  guest_count int not null default 1,
-  message text,
   table_number int references reception_tables(table_number),
+  message text,
   responded_at timestamptz not null default now()
 );
+
+create index if not exists rsvps_party_key_idx on rsvps (party_key);
 
 -- ------------------------------------------------------------------
 -- assign_table: atomically finds a table with enough free seats for
@@ -106,7 +111,7 @@ on conflict (table_number) do nothing;
 
 -- ------------------------------------------------------------------
 -- Row Level Security: lock these tables down from the public anon
--- key. The Netlify Function uses the service_role key (server-side
+-- key. The Netlify Functions use the service_role key (server-side
 -- only, never exposed to the browser) which bypasses RLS.
 -- ------------------------------------------------------------------
 alter table guests enable row level security;

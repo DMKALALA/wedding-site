@@ -1,12 +1,17 @@
 // Netlify Function: POST /.netlify/functions/rsvp
 //
 // One shared invite code covers the whole wedding (simpler than a
-// unique code per guest — easier to hand out, same event for
-// everyone). That code just gates the form; the specific guest record
-// is then looked up by full name (exact match, case-insensitive)
-// against the `guests` table, which the couple pre-populates. Records
-// the response in `rsvps` and auto-assigns a reception table (via the
-// assign_table() Postgres function) when attending.
+// unique code per guest). That code gates the form, but typing a
+// name is never a hard gate — anyone who knows the invite code can
+// RSVP, whether or not their name matches the couple's guest list.
+// (The guest list still powers live name suggestions as people type,
+// see netlify/functions/guest-suggest.js.)
+//
+// Every attending person gets their own row in `rsvps` (so a party of
+// three shows up as three rows sharing the same party_key and
+// submitted_name) rather than a single row with a headcount column.
+// Resubmitting under the same name replaces that party's previous
+// rows, so guests can change their mind without creating duplicates.
 //
 // Requires these Netlify environment variables (Site settings ->
 // Environment variables), never exposed to the browser:
@@ -55,7 +60,7 @@ async function assignTable(partySize) {
 }
 
 async function releaseTable(tableNumber, seats) {
-  if (!tableNumber) return;
+  if (!tableNumber || !seats) return;
   await supabaseFetch("rpc/release_table", {
     method: "POST",
     body: JSON.stringify({ t_number: tableNumber, seats }),
@@ -83,7 +88,7 @@ exports.handler = async (event) => {
   const inviteCode = (payload.inviteCode || "").trim().toUpperCase();
   const attending = payload.attending === "yes" || payload.attending === true;
   const message = (payload.message || "").trim();
-  const requestedGuests = Math.max(1, parseInt(payload.guests, 10) || 1);
+  const guestCount = Math.max(1, parseInt(payload.guests, 10) || 1);
 
   // Honeypot: silently accept-and-drop bot submissions.
   if (payload.botField) {
@@ -98,70 +103,67 @@ exports.handler = async (event) => {
     return jsonResponse(404, { ok: false, error: "wrong_code" });
   }
 
+  // Identifies this party across submissions, so resubmitting under the
+  // same name updates their response instead of creating duplicates.
+  const partyKey = name.toLowerCase();
+
   try {
-    // 1. The shared code just gets you in the door; find the specific
-    //    guest record by exact name match (case-insensitive) against
-    //    the couple's pre-populated guest list.
-    const guests = await supabaseFetch(
-      `guests?full_name=ilike.${encodeURIComponent(name)}&select=*`
-    );
-    const guest = guests && guests[0];
-
-    if (!guest) {
-      return jsonResponse(404, { ok: false, error: "not_found" });
-    }
-
-    const guestCount = Math.min(requestedGuests, guest.party_size);
-
-    // 2. Look up any prior response from this guest (so re-submitting
-    //    updates rather than duplicates, and table seats aren't double
-    //    counted).
     const existingRows = await supabaseFetch(
-      `rsvps?guest_id=eq.${guest.id}&select=*`
+      `rsvps?party_key=eq.${encodeURIComponent(partyKey)}&select=*`
     );
-    const existing = existingRows && existingRows[0];
+    const previousCount = existingRows ? existingRows.length : 0;
+    const previousTable = existingRows && existingRows[0] ? existingRows[0].table_number : null;
 
     let tableNumber = null;
     let tableWarning = null;
 
     if (attending) {
-      const sameAsBefore =
-        existing &&
-        existing.attending &&
-        existing.table_number &&
-        existing.guest_count === guestCount;
-
+      const sameAsBefore = previousTable && previousCount === guestCount;
       if (sameAsBefore) {
-        tableNumber = existing.table_number;
+        tableNumber = previousTable;
       } else {
-        if (existing && existing.attending && existing.table_number) {
-          await releaseTable(existing.table_number, existing.guest_count);
+        if (previousTable) {
+          await releaseTable(previousTable, previousCount);
         }
         tableNumber = await assignTable(guestCount);
         if (!tableNumber) {
           tableWarning = "no_table_capacity";
         }
       }
-    } else if (existing && existing.attending && existing.table_number) {
-      // Was attending, now declining — free up their seats.
-      await releaseTable(existing.table_number, existing.guest_count);
+    } else if (previousTable) {
+      await releaseTable(previousTable, previousCount);
     }
 
-    // 3. Upsert the RSVP record.
-    await supabaseFetch("rsvps?on_conflict=guest_id", {
-      method: "POST",
-      headers: { Prefer: "resolution=merge-duplicates" },
-      body: JSON.stringify({
-        guest_id: guest.id,
-        submitted_name: name,
-        submitted_email: email || null,
-        attending,
-        guest_count: guestCount,
-        message,
-        table_number: tableNumber,
-        responded_at: new Date().toISOString(),
-      }),
-    });
+    if (previousCount > 0) {
+      await supabaseFetch(`rsvps?party_key=eq.${encodeURIComponent(partyKey)}`, {
+        method: "DELETE",
+      });
+    }
+
+    const responded_at = new Date().toISOString();
+    const rows = attending
+      ? Array.from({ length: guestCount }, () => ({
+          party_key: partyKey,
+          submitted_name: name,
+          submitted_email: email || null,
+          attending: true,
+          table_number: tableNumber,
+          message,
+          responded_at,
+        }))
+      : [
+          {
+            party_key: partyKey,
+            submitted_name: name,
+            submitted_email: email || null,
+            attending: false,
+            table_number: null,
+            message,
+            responded_at,
+          },
+        ];
+
+    await supabaseFetch("rsvps", { method: "POST", body: JSON.stringify(rows) });
 
     return jsonResponse(200, {
       ok: true,
@@ -169,7 +171,7 @@ exports.handler = async (event) => {
       guestCount,
       tableNumber,
       tableWarning,
-      inviteName: guest.full_name,
+      inviteName: name,
     });
   } catch (error) {
     console.error(error);
