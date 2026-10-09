@@ -4,14 +4,14 @@
 
   const status = document.getElementById("rsvp-status");
 
-  // Submissions are stored via the Netlify Function at
-  // netlify/functions/rsvp.js (backed by Supabase — see supabase/schema.sql
+  // Submissions are stored via the Cloudflare Pages Function at
+  // functions/api/rsvp.js (backed by Supabase — see supabase/schema.sql
   // and README for setup). Guests attending get their auto-assigned
   // reception table number back in the response. A name that isn't on the
   // guest list is never blocked — the list only powers the live
-  // suggestions below, via netlify/functions/guest-suggest.js.
-  const ENDPOINT = "/.netlify/functions/rsvp";
-  const SUGGEST_ENDPOINT = "/.netlify/functions/guest-suggest";
+  // suggestions below, via functions/api/guest-suggest.js.
+  const ENDPOINT = "/api/rsvp";
+  const SUGGEST_ENDPOINT = "/api/guest-suggest";
 
   const nameInput = document.getElementById("rsvp-name");
   const suggestionsList = document.getElementById("rsvp-name-suggestions");

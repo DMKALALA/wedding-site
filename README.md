@@ -2,7 +2,7 @@
 
 This is my wedding website — Denis Kalala & Clèda Mputu.
 
-**Live site:** https://denisandcledaweddingday.netlify.app
+**Live site:** https://wedding-site-7zi.pages.dev
 
 The site opens with a Greenvelope-style envelope animation (click or tap to
 break the seal and reveal the invitation), then leads into the homepage with
@@ -32,14 +32,15 @@ wedding-site/
 │   ├── faq.js
 │   └── rsvp.js
 ├── assets/images/
-├── netlify/functions/
-│   ├── rsvp.js              # Records RSVPs + table assignment (see below)
-│   └── guest-suggest.js     # Live name suggestions for the RSVP form
+├── functions/
+│   ├── _lib/supabase.js     # Shared Supabase REST helper
+│   └── api/
+│       ├── rsvp.js          # Records RSVPs + table assignment (see below)
+│       └── guest-suggest.js # Live name suggestions for the RSVP form
 ├── supabase/
 │   ├── schema.sql            # Run once in Supabase to set up the RSVP database
 │   └── migration_open_rsvp.sql # Updates an existing project to the current schema
 ├── guests-template.csv       # Fill in and import as your guest list
-├── netlify.toml
 ├── .gitignore
 └── README.md
 ```
@@ -80,10 +81,9 @@ Then visit `http://localhost:8000`.
 
 The RSVP form suggests names as guests type (from the couple's real
 guest list), tracks every response, and auto-assigns each attending
-party a reception table — all via two Netlify Functions
-(`netlify/functions/rsvp.js` and `netlify/functions/guest-suggest.js`)
-backed by a free Supabase Postgres database. This replaces the earlier
-Netlify Forms setup.
+party a reception table — all via two Cloudflare Pages Functions
+(`functions/api/rsvp.js` and `functions/api/guest-suggest.js`) backed
+by a free Supabase Postgres database.
 
 **One-time setup, before you go live:**
 
@@ -107,15 +107,17 @@ Netlify Forms setup.
    Supabase, go to *Table Editor > guests > Insert > Import data from
    CSV* and upload it.
 4. **Get your API credentials.** In Supabase, go to *Project Settings >
-   API*. You'll need the **Project URL** and the **service_role**
-   secret key (not the `anon` key — the service role key is what lets
-   the server-side functions read the guest list and write RSVPs; it
-   must never be exposed in frontend code, which is why this lives in
-   Netlify Functions instead of `js/rsvp.js`).
-5. **Set Netlify environment variables.** In your Netlify site
-   dashboard: *Site configuration > Environment variables*, add:
-   - `SUPABASE_URL` — your Project URL
-   - `SUPABASE_SERVICE_ROLE_KEY` — your service_role key
+   API Keys > Legacy anon, service_role API keys*. You'll need the
+   **Project URL** and the **service_role** secret key (not the `anon`
+   key — the service role key is what lets the server-side functions
+   read the guest list and write RSVPs; it must never be exposed in
+   frontend code, which is why this lives in Pages Functions instead
+   of `js/rsvp.js`).
+5. **Set Cloudflare Pages environment variables.** In your Cloudflare
+   dashboard: *Workers & Pages > your project > Settings > Variables
+   and secrets*, add:
+   - `SUPABASE_URL` — your Project URL (type: Text)
+   - `SUPABASE_SERVICE_ROLE_KEY` — your service_role key (type: Secret)
 6. **Redeploy** so the functions pick up the new environment variables.
 
 **How it verifies guests:** it doesn't — there's no invite code or
@@ -138,24 +140,25 @@ seating headcount rather than something you have to expand yourself.
 Resubmitting under the same name replaces that party's previous rows
 rather than duplicating them.
 
-**Local testing:** install the [Netlify CLI](https://docs.netlify.com/cli/get-started/)
-(`npm install -g netlify-cli`), then run `netlify dev` from the project
-folder — it serves the static site and the function together at
-`http://localhost:8888`, reading `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY`
-from your Netlify site's environment variables (or a local `.env` file,
-gitignored).
+**Local testing:** install the [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/)
+(`npm install -g wrangler`), then run `wrangler pages dev .` from the
+project folder — it serves the static site and the functions together,
+reading `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY` from a local `.dev.vars`
+file (gitignored) or passed with `--binding`.
 
 ## Deploying
 
-The site needs Netlify (or another host with serverless functions) for
-the RSVP backend above; a plain static host would only work for the
-rest of the site.
+The site needs Cloudflare Pages (or another host with serverless
+functions) for the RSVP backend above; a plain static host would only
+work for the rest of the site.
 
 1. Push this repo to GitHub.
-2. Create a new site on Netlify from the repo.
-3. Leave the build command empty and the publish directory as `.`.
-   Netlify auto-detects functions in `netlify/functions` from
-   `netlify.toml`.
+2. In the Cloudflare dashboard, go to *Workers & Pages > Create
+   application > Pages > Import an existing Git repository*, connect
+   GitHub (scoped to just this repo), and select it.
+3. Leave the build command empty and the build output directory as
+   the repo root (`/`). Cloudflare auto-detects the Pages Functions in
+   `functions/api/`.
 4. Complete the Supabase setup above and add the environment variables
    before guests start RSVPing.
 

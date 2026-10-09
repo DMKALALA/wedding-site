@@ -1,8 +1,8 @@
-// Netlify Function: POST /.netlify/functions/rsvp
+// Cloudflare Pages Function: POST /api/rsvp
 //
 // There is no invite code or guest-list gate — anyone with the link
 // can RSVP under any name. (The guest list still powers live name
-// suggestions as people type, see netlify/functions/guest-suggest.js.)
+// suggestions as people type, see functions/api/guest-suggest.js.)
 // The only spam defense is the honeypot field below.
 //
 // Every attending person gets their own row in `rsvps` (so a party of
@@ -11,70 +11,38 @@
 // Resubmitting under the same name replaces that party's previous
 // rows, so guests can change their mind without creating duplicates.
 //
-// Requires these Netlify environment variables (Site settings ->
-// Environment variables), never exposed to the browser:
+// Requires these Cloudflare Pages environment variables/secrets
+// (Project > Settings > Environment variables), never exposed to the
+// browser:
 //   SUPABASE_URL
 //   SUPABASE_SERVICE_ROLE_KEY
 
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+import { jsonResponse, supabaseFetch } from "../_lib/supabase.js";
 
-function jsonResponse(statusCode, body) {
-  return {
-    statusCode,
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  };
-}
-
-async function supabaseFetch(path, options = {}) {
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
-    ...options,
-    headers: {
-      apikey: SERVICE_KEY,
-      Authorization: `Bearer ${SERVICE_KEY}`,
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
-  });
-  const text = await res.text();
-  if (!res.ok) {
-    throw new Error(`Supabase ${path} failed: ${res.status} ${text}`);
-  }
-  // PostgREST returns an empty body (not just on 204) for inserts/updates
-  // unless `Prefer: return=representation` is set, so guard against that
-  // rather than assuming a non-204 status always has a JSON body.
-  return text ? JSON.parse(text) : null;
-}
-
-async function assignTable(partySize) {
-  const result = await supabaseFetch("rpc/assign_table", {
+async function assignTable(env, partySize) {
+  const result = await supabaseFetch(env, "rpc/assign_table", {
     method: "POST",
     body: JSON.stringify({ party_size: partySize }),
   });
   return result; // int or null
 }
 
-async function releaseTable(tableNumber, seats) {
+async function releaseTable(env, tableNumber, seats) {
   if (!tableNumber || !seats) return;
-  await supabaseFetch("rpc/release_table", {
+  await supabaseFetch(env, "rpc/release_table", {
     method: "POST",
     body: JSON.stringify({ t_number: tableNumber, seats }),
   });
 }
 
-exports.handler = async (event) => {
-  if (event.httpMethod !== "POST") {
-    return jsonResponse(405, { ok: false, error: "method_not_allowed" });
-  }
-
-  if (!SUPABASE_URL || !SERVICE_KEY) {
+export async function onRequestPost({ request, env }) {
+  if (!env.SUPABASE_URL || !env.SUPABASE_SERVICE_ROLE_KEY) {
     return jsonResponse(500, { ok: false, error: "server_not_configured" });
   }
 
   let payload;
   try {
-    payload = JSON.parse(event.body || "{}");
+    payload = await request.json();
   } catch {
     return jsonResponse(400, { ok: false, error: "invalid_json" });
   }
@@ -100,6 +68,7 @@ exports.handler = async (event) => {
 
   try {
     const existingRows = await supabaseFetch(
+      env,
       `rsvps?party_key=eq.${encodeURIComponent(partyKey)}&select=*`
     );
     const previousCount = existingRows ? existingRows.length : 0;
@@ -114,19 +83,19 @@ exports.handler = async (event) => {
         tableNumber = previousTable;
       } else {
         if (previousTable) {
-          await releaseTable(previousTable, previousCount);
+          await releaseTable(env, previousTable, previousCount);
         }
-        tableNumber = await assignTable(guestCount);
+        tableNumber = await assignTable(env, guestCount);
         if (!tableNumber) {
           tableWarning = "no_table_capacity";
         }
       }
     } else if (previousTable) {
-      await releaseTable(previousTable, previousCount);
+      await releaseTable(env, previousTable, previousCount);
     }
 
     if (previousCount > 0) {
-      await supabaseFetch(`rsvps?party_key=eq.${encodeURIComponent(partyKey)}`, {
+      await supabaseFetch(env, `rsvps?party_key=eq.${encodeURIComponent(partyKey)}`, {
         method: "DELETE",
       });
     }
@@ -154,7 +123,7 @@ exports.handler = async (event) => {
           },
         ];
 
-    await supabaseFetch("rsvps", { method: "POST", body: JSON.stringify(rows) });
+    await supabaseFetch(env, "rsvps", { method: "POST", body: JSON.stringify(rows) });
 
     return jsonResponse(200, {
       ok: true,
@@ -168,4 +137,4 @@ exports.handler = async (event) => {
     console.error(error);
     return jsonResponse(500, { ok: false, error: "server_error" });
   }
-};
+}
