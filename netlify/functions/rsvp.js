@@ -1,11 +1,9 @@
 // Netlify Function: POST /.netlify/functions/rsvp
 //
-// One shared invite code covers the whole wedding (simpler than a
-// unique code per guest). That code gates the form, but typing a
-// name is never a hard gate — anyone who knows the invite code can
-// RSVP, whether or not their name matches the couple's guest list.
-// (The guest list still powers live name suggestions as people type,
-// see netlify/functions/guest-suggest.js.)
+// There is no invite code or guest-list gate — anyone with the link
+// can RSVP under any name. (The guest list still powers live name
+// suggestions as people type, see netlify/functions/guest-suggest.js.)
+// The only spam defense is the honeypot field below.
 //
 // Every attending person gets their own row in `rsvps` (so a party of
 // three shows up as three rows sharing the same party_key and
@@ -17,11 +15,9 @@
 // Environment variables), never exposed to the browser:
 //   SUPABASE_URL
 //   SUPABASE_SERVICE_ROLE_KEY
-//   WEDDING_INVITE_CODE   (the one shared code, e.g. "DENISANDCLEDA")
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const WEDDING_INVITE_CODE = (process.env.WEDDING_INVITE_CODE || "").trim().toUpperCase();
 
 function jsonResponse(statusCode, body) {
   return {
@@ -72,7 +68,7 @@ exports.handler = async (event) => {
     return jsonResponse(405, { ok: false, error: "method_not_allowed" });
   }
 
-  if (!SUPABASE_URL || !SERVICE_KEY || !WEDDING_INVITE_CODE) {
+  if (!SUPABASE_URL || !SERVICE_KEY) {
     return jsonResponse(500, { ok: false, error: "server_not_configured" });
   }
 
@@ -85,7 +81,6 @@ exports.handler = async (event) => {
 
   const name = (payload.name || "").trim();
   const email = (payload.email || "").trim().toLowerCase();
-  const inviteCode = (payload.inviteCode || "").trim().toUpperCase();
   const attending = payload.attending === "yes" || payload.attending === true;
   const message = (payload.message || "").trim();
   const guestCount = Math.max(1, parseInt(payload.guests, 10) || 1);
@@ -95,12 +90,8 @@ exports.handler = async (event) => {
     return jsonResponse(200, { ok: true, dropped: true });
   }
 
-  if (!name || !inviteCode) {
+  if (!name) {
     return jsonResponse(400, { ok: false, error: "missing_fields" });
-  }
-
-  if (inviteCode !== WEDDING_INVITE_CODE) {
-    return jsonResponse(404, { ok: false, error: "wrong_code" });
   }
 
   // Identifies this party across submissions, so resubmitting under the
@@ -171,7 +162,7 @@ exports.handler = async (event) => {
       guestCount,
       tableNumber,
       tableWarning,
-      inviteName: name,
+      submittedName: name,
     });
   } catch (error) {
     console.error(error);

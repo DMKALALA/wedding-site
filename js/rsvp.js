@@ -83,7 +83,7 @@
     const formData = new FormData(form);
     const submitBtn = form.querySelector('button[type="submit"]');
     submitBtn.disabled = true;
-    setStatus("pending", "Checking your invitation…");
+    setStatus("pending", "Sending your RSVP…");
 
     try {
       const response = await fetch(ENDPOINT, {
@@ -91,7 +91,6 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: formData.get("name"),
-          inviteCode: formData.get("inviteCode"),
           email: formData.get("email"),
           attending: formData.get("attending"),
           guests: formData.get("guests"),
@@ -103,15 +102,7 @@
       const result = await response.json();
 
       if (!response.ok) {
-        if (result.error === "wrong_code") {
-          setStatus(
-            "error",
-            "That invite code doesn't match. Please double check what's on your invitation, or reach out to us directly."
-          );
-        } else {
-          throw new Error(result.error || "request_failed");
-        }
-        return;
+        throw new Error(result.error || "request_failed");
       }
 
       if (result.attending) {

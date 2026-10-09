@@ -116,22 +116,18 @@ Netlify Forms setup.
    dashboard: *Site configuration > Environment variables*, add:
    - `SUPABASE_URL` — your Project URL
    - `SUPABASE_SERVICE_ROLE_KEY` — your service_role key
-   - `WEDDING_INVITE_CODE` — one shared code for the whole wedding
-     (e.g. `DENISANDCLEDA`) that you give out to all your guests
-     however you like — printed on invitations, texted, etc.
 6. **Redeploy** so the functions pick up the new environment variables.
 
-**How it verifies guests:** the **invite code** must match
-`WEDDING_INVITE_CODE` (one code for everyone, simplest to hand out
-since it's all one event) — that's the only hard gate. The **name**
-field is never checked against the guest list; anyone who knows the
-invite code can RSVP under any name. As they type, the form calls
-`guest-suggest.js`, which looks up names in `guests` that contain what
-they've typed so far and offers them as suggestions, so guests can
-find the exact spelling the couple has on file — but picking a
-suggestion is optional. Email is optional too, and never used for
-matching — just recorded if they give it, for your own contact
-records.
+**How it verifies guests:** it doesn't — there's no invite code or
+password, so anyone with the link can RSVP under any name (this was a
+deliberate choice after guests had trouble with an earlier invite-code
+step; the honeypot field is the only spam defense). As they type, the
+form calls `guest-suggest.js`, which looks up names in `guests` that
+contain what they've typed so far and offers them as suggestions, so
+guests can find the exact spelling the couple has on file — but
+picking a suggestion is optional. Email is optional too, and never
+used for matching — just recorded if they give it, for your own
+contact records.
 
 **Tracking responses:** every response lands in the `rsvps` table in
 Supabase (Table Editor, or export to CSV anytime via *Export data* for
