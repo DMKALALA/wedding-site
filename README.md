@@ -2,7 +2,7 @@
 
 This is my wedding website — Denis Kalala & Clèda Mputu.
 
-**Live site:** https://wedding-site-7zi.pages.dev
+**Live site:** https://denisandcledaweddingday.pages.dev
 
 The site opens with a Greenvelope-style envelope animation (click or tap to
 break the seal and reveal the invitation), then leads into the homepage with
