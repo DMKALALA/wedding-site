@@ -5,8 +5,9 @@ const WEDDING_CONFIG = {
   partner2: "Clèda Mputu",
   monogram: "D&C",
 
-  // ISO 8601 date-time used by the countdown.
-  date: "2026-11-14T13:00:00",
+  // ISO 8601 date-time used by the countdown. The -05:00 offset pins it
+  // to Louisville time (EST) so guests in other time zones count down correctly.
+  date: "2026-11-14T13:00:00-05:00",
 
   // Human-readable strings shown in the hero and details section.
   displayDate: "November 14, 2026",

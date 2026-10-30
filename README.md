@@ -52,7 +52,7 @@ RSVP deadline — lives in `js/config.js`. Edit that file and the hero,
 details section, countdown, and envelope card all update automatically:
 
 ```js
-date: '2026-11-14T14:00:00',
+date: '2026-11-14T13:00:00-05:00',
 location: 'Louisville, Kentucky',
 ```
 
