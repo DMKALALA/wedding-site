@@ -2,7 +2,7 @@
 // site (hero, details section, envelope card, countdown) updates itself.
 const WEDDING_CONFIG = {
   partner1: "Denis Kalala",
-  partner2: "Clèda Mputu",
+  partner2: "Cléda Mputu",
   monogram: "D&C",
 
   // ISO 8601 date-time used by the countdown. The -05:00 offset pins it
@@ -25,7 +25,7 @@ const WEDDING_CONFIG = {
   rsvpDeadline: "October 1, 2026", // TODO: confirm your actual RSVP deadline
 
   invitationMessage:
-    "Together with their families, Denis and Clèda request the pleasure of your company as they exchange vows and celebrate their marriage.",
+    "Together with their families, Denis and Cléda request the pleasure of your company as they exchange vows and celebrate their marriage.",
 
   hashtag: "#DenisAndCleda",
 };

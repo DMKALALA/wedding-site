@@ -1,6 +1,6 @@
 # Wedding Site
 
-This is my wedding website — Denis Kalala & Clèda Mputu.
+This is my wedding website — Denis Kalala & Cléda Mputu.
 
 **Live site:** https://denisandcledaweddingday.pages.dev
 

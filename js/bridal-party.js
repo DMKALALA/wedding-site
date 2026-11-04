@@ -3,7 +3,7 @@
 // Example:
 // { name: "Jane Doe", role: "Maid of Honor", photo: "assets/images/jane-web.jpg" }
 const BRIDAL_PARTY = {
-  bride: { name: "Clèda Mputu", role: "Bride", photo: "assets/images/_DSC4849_Bride-web.jpg" },
+  bride: { name: "Cléda Mputu", role: "Bride", photo: "assets/images/_DSC4849_Bride-web.jpg" },
   groom: {
     name: "Denis Kalala",
     role: "Groom",
